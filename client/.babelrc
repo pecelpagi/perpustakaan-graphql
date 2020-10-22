@@ -1,0 +1,35 @@
+{
+    "presets": [
+        "env",
+        "react"
+    ],
+    "plugins": [
+        "syntax-object-rest-spread",
+        "syntax-dynamic-import",
+        [
+            "module-resolver",
+            {
+                "alias": {
+                    "~": "./src/js"
+                }
+            }
+        ],
+        [
+            "babel-plugin-root-import",
+            {
+                "paths": [
+                    {
+                        "rootPathPrefix": "~",
+                        "rootPathSuffix": "src/js"
+                    }
+                ]
+            }
+        ],
+        [
+            "transform-class-properties",
+            {
+                "spec": true
+            }
+        ]
+    ]
+}

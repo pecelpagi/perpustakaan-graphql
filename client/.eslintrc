@@ -1,0 +1,50 @@
+{
+    "parser": "babel-eslint",
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": true
+            }
+        ],
+        "react/prop-types": [
+            2
+        ],
+        "react/jsx-uses-vars": [
+            2
+        ],
+        "max-len": [
+            1,
+            120,
+            2,
+            {
+                "ignoreComments": true
+            }
+        ],
+        "quotes": [
+            "error",
+            "double",
+            {
+                "avoidEscape": true
+            }
+        ]
+    },
+    "env": {
+        "browser": true
+    },
+    "settings": {
+        "import/resolver": {
+            "babel-module": {
+                "alias": {
+                    "~": "./src/js"
+                }
+            }
+        }
+    },
+    "extends": [
+        "airbnb-base"
+    ]
+}

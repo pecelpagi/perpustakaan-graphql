@@ -4,7 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --history-api-fallback --mode development",
+    "build": "webpack --mode production",
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage",
+    "open:coverage": "xdg-open ./coverage/lcov-report/index.html",
+    "coverage:all": "jest --coverage --collectCoverageFrom=src/js/**/*.{js,jsx}"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "./src/enzyme.setup.js",
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "moduleNameMapper": {
+      "\\.(png|jpg|gif|ttf|eot|svg)$": "<rootDir>/mocks/fileMock.js"
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
