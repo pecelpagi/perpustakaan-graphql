@@ -3,7 +3,7 @@
     height: 100%;
     background-color: #00b7b5;
     position: fixed;
-    top: 0px;
+    top: 50px;
     left: 0px;
     a {
         font-weight: bold;
@@ -63,5 +63,25 @@
     }
     .sidebar-nav > li.nav-parent.nav-expanded .nav-children {
         display: block;
+    }
+}
+.header {
+    position: fixed;
+    height: 50px;
+    top: 0px;
+    width: 100%;
+    background-color: #00b7b5;
+    z-index: 1;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    .logo {
+        a {
+            font-family: 'Fredoka One', cursive;
+            color: #FFF;
+            text-decoration: none !important;
+            font-size: 1.8em;
+            position: relative;
+            top: 4px;
+            left: 20px;
+        }
     }
 }

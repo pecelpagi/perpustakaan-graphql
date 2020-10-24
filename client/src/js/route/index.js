@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import asyncComponent from "./components/AsyncComponent";
 import AppNavigation from "./components/AppNavigation";
+import Header from "./components/Header";
 
 require("../sass/styles.scss");
 
@@ -29,6 +30,7 @@ class App extends React.Component {
       <Switch>
         <Route path="/">
             <div>
+                <Header />
                 <AppNavigation />
                 <Route exact path="/" component={RedirectToDashboard} />
                 <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
