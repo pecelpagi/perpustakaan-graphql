@@ -6,7 +6,7 @@ class Dashboard extends React.Component {
     super(props);
 
     this.state = {
-      title: "Dashboard Page",
+      title: "",
     };
   }
 
