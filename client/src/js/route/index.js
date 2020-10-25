@@ -32,9 +32,11 @@ class App extends React.Component {
             <div>
                 <Header />
                 <AppNavigation />
-                <Route exact path="/" component={RedirectToDashboard} />
-                <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
-                <PrivateRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
+                <div className="page-content">
+                  <Route exact path="/" component={RedirectToDashboard} />
+                  <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
+                  <PrivateRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
+                </div>
             </div>
         </Route>
       </Switch>

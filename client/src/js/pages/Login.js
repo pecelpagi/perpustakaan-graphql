@@ -1,21 +1,71 @@
 /* eslint prop-types: 0 */
 import React from "react";
+import update from "immutability-helper";
+import InputText from "../components/InputText";
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      title: "Login Page",
+      form: {
+        username: "",
+        password: "",
+      },
     };
   }
 
-  render() {
-    const { title } = this.state;
+  changeValueHandler = async (type, val) => {
+    const { form } = this.state;
 
+    const newValue = update(form, {
+      [type]: { $set: val },
+    });
+
+    this.setState({ form: newValue });
+  }
+
+  renderForm = () => {
+    const { form } = this.state;
+
+    return [
+      (
+        <div key="username" className="row mb-sm">
+          <div className="col-sm-12">
+            <InputText
+              label="Username"
+              value={form.username}
+              changeEvent={(val) => { this.changeValueHandler("username", val); }}
+            />
+          </div>
+        </div>
+      ),
+      (
+        <div key="password" className="row mb-sm">
+          <div className="col-sm-12">
+            <InputText
+              label="Password"
+              value={form.password}
+              changeEvent={(val) => { this.changeValueHandler("password", val); }}
+            />
+          </div>
+        </div>
+      ),
+    ];
+  }
+
+  render() {
     return (
-      <div>
-        <h1>{title}</h1>
+      <div className="form-login">
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body">
+            {this.renderForm()}
+          </div>
+          <div class="panel-footer">
+            <button className="btn btn-primary btn-block" type="button">Login</button>
+          </div>
+        </div>
       </div>
     );
   }
