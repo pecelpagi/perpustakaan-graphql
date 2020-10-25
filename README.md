@@ -1,2 +1,2 @@
-# perpustakaan-graphql
+# Aplikasi Perpustakaan Sederhana
 latihan belajar GraphQL
