@@ -41,7 +41,7 @@ class AppNavigation extends React.Component {
       } else {
         menu.push(
                 <li className={`${isExpanded ? "nav-expanded" : ""}`}>
-                    <a onClick={() => this.setMenuExpanded(x.id)} ><i className={x.icon} />{x.title}</a>
+                    <a onClick={() => this.setMenuExpanded(x.id)} href={x.link} ><i className={x.icon} />{x.title}</a>
                 </li>,
         );
       }

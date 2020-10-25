@@ -28,20 +28,20 @@ class Header extends React.Component {
                     <a href="#">{title}</a>
                 </div>
                 <div className="account-menu">
-                    {/* <button class="btn btn-default" type="button">
+                    {/* <button className="btn btn-default" type="button">
                             <span><i className="fa fa-lock" /></span>
                             &nbsp;
                             Login
                     </button> */}
-                    <div class={`dropdown ${isShowingDropdown ? "open" : ""}`}>
-                        <button class="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
+                    <div className={`dropdown ${isShowingDropdown ? "open" : ""}`}>
+                        <button className="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
                             <span><i className="fa fa-user" /></span>
                             &nbsp;
                             Administrator
                             {" "}
                             <span><i className="fa fa-angle-down" /></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul className="dropdown-menu">
                             <li><a href="#">Ubah Password</a></li>
                             <li><a href="#">Logout</a></li>
                         </ul>

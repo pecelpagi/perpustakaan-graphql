@@ -57,12 +57,12 @@ class Login extends React.Component {
   render() {
     return (
       <div className="form-login">
-        <div class="panel panel-default">
-          <div class="panel-heading">Login</div>
-          <div class="panel-body">
+        <div className="panel panel-default">
+          <div className="panel-heading">Login</div>
+          <div className="panel-body">
             {this.renderForm()}
           </div>
-          <div class="panel-footer">
+          <div className="panel-footer">
             <button className="btn btn-primary btn-block" type="button">Login</button>
           </div>
         </div>

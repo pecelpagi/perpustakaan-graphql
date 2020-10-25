@@ -40,7 +40,7 @@ const menuData = [
       {
         id: "3.1",
         title: "Status Peminjaman",
-        link: "/peminjaman",
+        link: "/peminjaman-list",
       },
       {
         id: "3.2",
@@ -57,12 +57,12 @@ const menuData = [
       {
         id: "4.1",
         title: "Kelola Anggota",
-        link: "/anggota",
+        link: "/members",
       },
       {
         id: "4.2",
         title: "Tambah Anggota",
-        link: "/anggota/tambah",
+        link: "/member/tambah",
       },
     ],
   },
