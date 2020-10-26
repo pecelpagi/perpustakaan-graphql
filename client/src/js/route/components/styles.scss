@@ -60,6 +60,10 @@
                 color: #fbcc36;
             }
         }
+        > li.active > a {
+            background-color: transparent;
+            color: #fbcc36;
+        }
     }
     .sidebar-nav > li.nav-parent.nav-expanded .nav-children {
         display: block;

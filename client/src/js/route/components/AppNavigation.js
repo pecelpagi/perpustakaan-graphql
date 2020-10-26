@@ -10,9 +10,34 @@ class AppNavigation extends React.Component {
     super(props);
 
     this.state = {
-      menuState: menuData,
       expandedMenu: "",
+      activeChild: "",
     };
+  }
+
+  componentDidMount = () => {
+    this.searchExpandedMenu();
+  }
+
+  searchExpandedMenu = () => {
+    const { pathname } = window.location;
+    const found = menuData.find((x) => {
+      if (ishasProperty(x, "children")) {
+        const childFound = x.children.find(child => (child.link === pathname));
+
+        if (childFound) {
+          this.setState({ activeChild: childFound.id });
+        }
+
+        return !!childFound;
+      }
+
+      return (x.link === pathname);
+    });
+
+    if (found) {
+      this.setState({ expandedMenu: found.id });
+    }
   }
 
   setMenuExpanded = (val) => {
@@ -20,18 +45,18 @@ class AppNavigation extends React.Component {
   }
 
   renderMenu = () => {
-    const { menuState, expandedMenu } = this.state;
+    const { expandedMenu, activeChild } = this.state;
     const menu = [];
 
-    menuState.forEach((x) => {
-      const isExpanded = (x.id === expandedMenu);
+    menuData.forEach((x) => {
+      const isExpanded = (String(x.id) === String(expandedMenu));
       if (ishasProperty(x, "children")) {
         menu.push(
-            <li className={`nav-parent ${isExpanded ? "nav-expanded" : ""}`}>
+            <li key={x.id} className={`nav-parent ${isExpanded ? "nav-expanded" : ""}`}>
                 <a onClick={() => this.setMenuExpanded(isExpanded ? "" : x.id)}><i className={x.icon} />{x.title}</a>
                 <ul className="nav-children">
                     {x.children.map(child => (
-                        <li>
+                        <li key={child.id} className={String(activeChild) === String(child.id) ? "active" : ""}>
                             <a href={child.link}>{child.title}</a>
                         </li>
                     ))}
@@ -40,7 +65,7 @@ class AppNavigation extends React.Component {
         );
       } else {
         menu.push(
-                <li className={`${isExpanded ? "nav-expanded" : ""}`}>
+                <li key={x.id} className={`${isExpanded ? "nav-expanded" : ""}`}>
                     <a onClick={() => this.setMenuExpanded(x.id)} href={x.link} ><i className={x.icon} />{x.title}</a>
                 </li>,
         );
@@ -53,8 +78,6 @@ class AppNavigation extends React.Component {
   }
 
   render() {
-    const { title } = this.state;
-
     return (
       <div className="sidebar">
         {this.renderMenu()}
