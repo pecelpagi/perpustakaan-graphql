@@ -1,6 +1,5 @@
 /* eslint prop-types: 0 */
 import React from "react";
-
 import "./styles.scss";
 
 class Header extends React.Component {
@@ -11,6 +10,10 @@ class Header extends React.Component {
       title: "Perpustakaan",
       isShowingDropdown: false,
     };
+  }
+
+  navToLogin = () => {
+    location.href = "/auth/login";
   }
 
   showDropdown = () => {
@@ -28,12 +31,12 @@ class Header extends React.Component {
                     <a href="#">{title}</a>
                 </div>
                 <div className="account-menu">
-                    {/* <button className="btn btn-default" type="button">
+                    <button className="btn btn-default" type="button" onClick={this.navToLogin}>
                             <span><i className="fa fa-lock" /></span>
                             &nbsp;
                             Login
-                    </button> */}
-                    <div className={`dropdown ${isShowingDropdown ? "open" : ""}`}>
+                    </button>
+                    {/* <div className={`dropdown ${isShowingDropdown ? "open" : ""}`}>
                         <button className="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
                             <span><i className="fa fa-user" /></span>
                             &nbsp;
@@ -45,7 +48,7 @@ class Header extends React.Component {
                             <li><a href="#">Ubah Password</a></li>
                             <li><a href="#">Logout</a></li>
                         </ul>
-                    </div>
+                    </div> */}
                 </div>
             </div>
     );

@@ -8,9 +8,9 @@
     a {
         font-weight: bold;
         color: #FFF;
+        text-decoration: none !important;
         &:hover {
             cursor: pointer;
-            text-decoration: none;
         }
         i {
             margin-right: 10px;
@@ -55,6 +55,7 @@
         > li > a {
             display: block;
             padding: 8px;
+            text-decoration: none !important;
             &:hover {
                 background-color: transparent;
                 color: #fbcc36;

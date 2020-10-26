@@ -7,6 +7,18 @@ body {
     font-weight: 400;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: #f3f7f8;
+}
+.btn {
+  font-weight: 600;
+}
+.btn-primary {
+  background-color: #00B7B4;
+  border: 0;
+  color: #fff;
+  &:hover {
+    background-color: #28c8c7;
+  }
 }
 .page-content {
   padding-top: 4.5em;
@@ -14,8 +26,28 @@ body {
   padding-right: 12px;
 }
 .form-login {
-  width: 40%;
+  width: 35%;
   position: relative;
   margin: 0 auto;
   top: 3em;
+}
+.panel-heading {
+  background-color: #FFF !important;
+  .panel-title {
+    font-weight: 600;
+  }
+}
+label {
+  font-weight: normal;
+}
+.form-control {
+  border-color: #eceff1;
+  border-radius: 2px;
+  height: 40px;
+  padding: 6px 12px;
+  box-shadow: none;
+  &:focus {
+    border: 1px solid #00b7b5;
+    box-shadow: none;
+  }
 }

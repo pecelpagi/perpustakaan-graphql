@@ -1,5 +1,6 @@
 /* eslint prop-types: 0 */
 import React from "react";
+import { Link } from "react-router-dom";
 import menuData from "./menu";
 import { ishasProperty } from "../../utils";
 
@@ -57,7 +58,7 @@ class AppNavigation extends React.Component {
                 <ul className="nav-children">
                     {x.children.map(child => (
                         <li key={child.id} className={String(activeChild) === String(child.id) ? "active" : ""}>
-                            <a href={child.link}>{child.title}</a>
+                            <Link to={child.link} onClick={() => { this.setState({ activeChild: child.id }); }}>{child.title}</Link>
                         </li>
                     ))}
                 </ul>
@@ -66,7 +67,7 @@ class AppNavigation extends React.Component {
       } else {
         menu.push(
                 <li key={x.id} className={`${isExpanded ? "nav-expanded" : ""}`}>
-                    <a onClick={() => this.setMenuExpanded(x.id)} href={x.link} ><i className={x.icon} />{x.title}</a>
+                    <Link onClick={() => this.setMenuExpanded(x.id)} to={x.link} ><i className={x.icon} />{x.title}</Link>
                 </li>,
         );
       }

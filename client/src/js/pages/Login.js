@@ -58,11 +58,9 @@ class Login extends React.Component {
     return (
       <div className="form-login">
         <div className="panel panel-default">
-          <div className="panel-heading">Login</div>
+          <div className="panel-heading"><h3 className="panel-title">Login Perpustakaan</h3></div>
           <div className="panel-body">
             {this.renderForm()}
-          </div>
-          <div className="panel-footer">
             <button className="btn btn-primary btn-block" type="button">Login</button>
           </div>
         </div>
