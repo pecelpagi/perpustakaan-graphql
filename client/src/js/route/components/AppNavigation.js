@@ -22,7 +22,7 @@ class AppNavigation extends React.Component {
 
   searchExpandedMenu = () => {
     const { pathname } = window.location;
-    const found = menuData.find((x) => {
+    const found = menuData().find((x) => {
       if (ishasProperty(x, "children")) {
         const childFound = x.children.find(child => (child.link === pathname));
 
@@ -49,7 +49,7 @@ class AppNavigation extends React.Component {
     const { expandedMenu, activeChild } = this.state;
     const menu = [];
 
-    menuData.forEach((x) => {
+    menuData().forEach((x) => {
       const isExpanded = (String(x.id) === String(expandedMenu));
       if (ishasProperty(x, "children")) {
         menu.push(

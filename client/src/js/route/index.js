@@ -6,8 +6,10 @@ import {
 import asyncComponent from "./components/AsyncComponent";
 import AppNavigation from "./components/AppNavigation";
 import Header from "./components/Header";
+import { getToken } from "../utils";
 
 require("../sass/styles.scss");
+
 
 const RedirectToDashboard = () => (
     <Redirect
@@ -16,11 +18,37 @@ const RedirectToDashboard = () => (
       }}
     />
 );
+
+const isAuthenticated = (getToken() && getToken().length > 0);
 // eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props => (<Component {...props} />)
+    render={props => (isAuthenticated ? (
+      <Component {...props} />
+    ) : (
+        <Redirect
+          to={{
+            pathname: "/auth/login",
+            state: { from: props.location }, // eslint-disable-line react/prop-types
+          }}
+        />
+    ))
+    }
+  />
+);
+const AuthRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (!isAuthenticated ? (
+      <Component {...props} />
+    ) : (
+        <Redirect
+          to={{
+            pathname: "/dashboard",
+          }}
+        />
+    ))
     }
   />
 );
@@ -34,7 +62,7 @@ class App extends React.Component {
                 <AppNavigation />
                 <div className="page-content">
                   <Route exact path="/" component={RedirectToDashboard} />
-                  <Route path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
+                  <AuthRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
                   <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
                   <PrivateRoute path="/books" component={asyncComponent(() => import("../pages/Book"))} />
                   <PrivateRoute path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />

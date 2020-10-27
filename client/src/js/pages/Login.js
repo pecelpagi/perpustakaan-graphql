@@ -1,6 +1,8 @@
 /* eslint prop-types: 0 */
 import React from "react";
 import update from "immutability-helper";
+import * as graphqlApi from "../data";
+import { setToken } from "../utils";
 import InputText from "../components/InputText";
 
 class Login extends React.Component {
@@ -23,6 +25,17 @@ class Login extends React.Component {
     });
 
     this.setState({ form: newValue });
+  }
+
+  doLoggingIn = async () => {
+    const { form } = this.state;
+
+    const res = await graphqlApi.login(form);
+
+    if (res.token) {
+      setToken(res.token);
+      location.href = "/dashboard";
+    }
   }
 
   renderForm = () => {
@@ -61,7 +74,7 @@ class Login extends React.Component {
           <div className="panel-heading"><h3 className="panel-title">Login Perpustakaan</h3></div>
           <div className="panel-body">
             {this.renderForm()}
-            <button className="btn btn-primary btn-block" type="button">Login</button>
+            <button className="btn btn-primary btn-block" type="button" onClick={this.doLoggingIn}>Login</button>
           </div>
         </div>
       </div>

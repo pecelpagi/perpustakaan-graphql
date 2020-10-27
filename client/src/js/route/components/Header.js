@@ -1,6 +1,7 @@
 /* eslint prop-types: 0 */
 import React from "react";
 import "./styles.scss";
+import { getToken } from "../../utils";
 
 class Header extends React.Component {
   constructor(props) {
@@ -22,35 +23,48 @@ class Header extends React.Component {
     this.setState({ isShowingDropdown: !isShowingDropdown });
   }
 
+  renderAuthComponent = (isShowingDropdown) => {
+    const isAuthenticated = (getToken() && getToken().length > 0);
+
+    if (isAuthenticated) {
+      return (
+        <div className={`dropdown ${isShowingDropdown ? "open" : ""}`}>
+          <button className="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
+            <span><i className="fa fa-user" /></span>
+                            &nbsp;
+                            Administrator
+                            {" "}
+            <span><i className="fa fa-angle-down" /></span>
+          </button>
+          <ul className="dropdown-menu">
+            <li><a href="#">Ubah Password</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
+      );
+    }
+
+    return (
+      <button className="btn btn-default" type="button" onClick={this.navToLogin}>
+        <span><i className="fa fa-lock" /></span>
+        &nbsp;
+        Login
+      </button>
+    );
+  }
+
   render() {
     const { title, isShowingDropdown } = this.state;
 
     return (
-            <div className="header">
-                <div className="logo">
-                    <a href="#">{title}</a>
-                </div>
-                <div className="account-menu">
-                    <button className="btn btn-default" type="button" onClick={this.navToLogin}>
-                            <span><i className="fa fa-lock" /></span>
-                            &nbsp;
-                            Login
-                    </button>
-                    {/* <div className={`dropdown ${isShowingDropdown ? "open" : ""}`}>
-                        <button className="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
-                            <span><i className="fa fa-user" /></span>
-                            &nbsp;
-                            Administrator
-                            {" "}
-                            <span><i className="fa fa-angle-down" /></span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li><a href="#">Ubah Password</a></li>
-                            <li><a href="#">Logout</a></li>
-                        </ul>
-                    </div> */}
-                </div>
-            </div>
+      <div className="header">
+        <div className="logo">
+          <a href="#">{title}</a>
+        </div>
+        <div className="account-menu">
+          {this.renderAuthComponent(isShowingDropdown)}
+        </div>
+      </div>
     );
   }
 }

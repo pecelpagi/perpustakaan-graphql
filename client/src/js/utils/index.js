@@ -7,9 +7,7 @@ export const graphqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const getToken = () => {
-  return localStorage.getItem("usertoken");
-};
+export const getToken = () => localStorage.getItem("usertoken");
 
 export const setToken = (_token) => {
   localStorage.setItem("usertoken", _token); // eslint-disable-line no-undef
