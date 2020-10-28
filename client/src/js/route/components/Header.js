@@ -1,7 +1,7 @@
 /* eslint prop-types: 0 */
 import React from "react";
 import "./styles.scss";
-import { getToken } from "../../utils";
+import { getToken, removeToken } from "../../utils";
 
 class Header extends React.Component {
   constructor(props) {
@@ -23,6 +23,13 @@ class Header extends React.Component {
     this.setState({ isShowingDropdown: !isShowingDropdown });
   }
 
+  logout = (e) => {
+    e.preventDefault();
+
+    removeToken();
+    location.href = "/auth/login";
+  }
+
   renderAuthComponent = (isShowingDropdown) => {
     const isAuthenticated = (getToken() && getToken().length > 0);
 
@@ -38,7 +45,7 @@ class Header extends React.Component {
           </button>
           <ul className="dropdown-menu">
             <li><a href="#">Ubah Password</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="#" onClick={this.logout}>Logout</a></li>
           </ul>
         </div>
       );

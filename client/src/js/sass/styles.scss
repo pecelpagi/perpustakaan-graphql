@@ -9,15 +9,20 @@ body {
     overflow-y: auto;
     background-color: #f3f7f8;
 }
+.mb-sm { margin-bottom: 20px!important; display: block; }
+.mb-reset {
+  margin-bottom: 0px;
+}
 .btn {
   font-weight: 600;
 }
 .btn-primary {
-  background-color: #00B7B4;
-  border: 0;
-  color: #fff;
+  background-color: #00B7B4 !important;
+  border: 0 !important;
+  color: #fff !important;
+  outline: none !important;
   &:hover {
-    background-color: #28c8c7;
+    background-color: #28c8c7 !important;
   }
 }
 .page-content {
@@ -50,4 +55,7 @@ label {
     border: 1px solid #00b7b5;
     box-shadow: none;
   }
+}
+.form-group + .error {
+  color: #dd4b39;
 }

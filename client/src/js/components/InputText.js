@@ -36,7 +36,7 @@ class InputText extends React.Component {
     } = this.props;
 
     return (
-      <div className={"form-group mb-0"}>
+      <div className={"form-group mb-reset"}>
         {label && <label>{label}</label>}
         <input
           type="text"
