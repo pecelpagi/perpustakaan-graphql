@@ -6,7 +6,7 @@ export const getUsers = async () => {
     .query({
       query: gql`
                   query {
-                      users() {
+                      users {
                           id
                           username
                           fullname
@@ -16,6 +16,24 @@ export const getUsers = async () => {
     });
 
   return res.data.users;
+};
+
+
+export const getCategories = async () => {
+  const res = await Util.graphqlClient
+    .query({
+      query: gql`
+                  query {
+                      categories {
+                          id
+                          code
+                          name
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
 };
 
 export const login = async (payload) => {

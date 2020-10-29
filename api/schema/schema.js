@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Constants = require('../constants');
 const User = require('../models/users');
+const Category = require('../models/categories');
 
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
@@ -30,6 +31,15 @@ const LoginType = new GraphQLObjectType({
     }),
 });
 
+const CategoryType = new GraphQLObjectType({
+    name: 'Category',
+    fields: () => ({
+        id: { type: GraphQLID },
+        code: { type: GraphQLString },
+        name: { type: GraphQLString },
+    }),
+});
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -37,6 +47,12 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(UserType),
             resolve(parent, args) {
                 return User.find();
+            }
+        },
+        categories: {
+            type: new GraphQLList(CategoryType),
+            resolve(parent, args) {
+                return Category.find();
             }
         },
     }
