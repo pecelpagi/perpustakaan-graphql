@@ -48,7 +48,7 @@ class Category extends React.Component {
     const res = await graphqlApi.getCategories(state);
     const { categories, meta_data: metaData } = res;
 
-    return { data: categories, totalPage: metaData.totalPage };
+    return { data: categories, totalPage: metaData.total_page };
   }
 
   render() {

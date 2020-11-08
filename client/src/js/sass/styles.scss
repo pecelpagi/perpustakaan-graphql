@@ -118,5 +118,10 @@ label {
     z-index: 1;
     width: 17px;
     text-align: center;
+  }
 }
+.pagination {
+  a:hover {
+    cursor: pointer;
+  }
 }

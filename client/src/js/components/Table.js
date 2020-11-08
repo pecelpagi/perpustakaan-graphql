@@ -54,16 +54,14 @@ class Table extends React.Component {
     this.fetchData({ skip: page * parseInt(limit, 10), limit: parseInt(limit, 10) });
   };
 
-  renderFilterText = () => {
-    return (
+  renderFilterText = () => (
       <InputText
         placeholder="Pencarian ..."
         value=""
         changeEvent={() => { }}
         required
       />
-    );
-  }
+  )
 
   onChangeLimitData = (val) => {
     this.setState({ limit: val }, () => {
@@ -105,10 +103,13 @@ class Table extends React.Component {
     const { columns } = this.props;
 
     return (
-      <table className="table table-bordered mb-reset">
-        {this.renderTableHeader(columns)}
-        {this.renderTableBody(columns, data)}
-      </table>
+      <div>
+        <table className="table table-bordered mb-reset">
+          {this.renderTableHeader(columns)}
+          {this.renderTableBody(columns, data)}
+        </table>
+        {this.renderPagination()}
+      </div>
     );
   }
 
@@ -124,6 +125,65 @@ class Table extends React.Component {
 
     // render without wrapper: default
     return this.renderTable();
+  }
+
+  onClickPage = (val) => {
+    this.setState({ page: val }, () => {
+      this.forceRefetch();
+    });
+  }
+
+  onPrev = (disabled) => {
+    if (!disabled) {
+      const { page } = this.state;
+      this.setState({ page: (page - 1) }, () => {
+        this.forceRefetch();
+      });
+    }
+  }
+
+  onNext = (disabled) => {
+    if (!disabled) {
+      const { page } = this.state;
+      this.setState({ page: (page + 1) }, () => {
+        this.forceRefetch();
+      });
+    }
+  }
+
+  renderPagination = () => {
+    const { totalPage, page } = this.state;
+    const pages = [];
+    const disablePrev = (page === 0);
+    const disableNext = (page === (totalPage - 1));
+
+    for (let i = 0; i < totalPage; i += 1) {
+      pages.push(
+        <li
+          key={i}
+          className={`page-item ${i === page ? "active" : ""}`}>
+            <a className="page-link" onClick={() => this.onClickPage(i)}>{i + 1}</a>
+          </li>,
+      );
+    }
+
+    return (
+      <ul className="pagination mb-reset" style={{ float: "right" }}>
+        <li className={`page-item ${disablePrev ? "disabled" : ""}`}>
+          <a className="page-link" onClick={() => this.onPrev(disablePrev)}>
+            <span>&laquo;</span>
+            <span className="sr-only">Previous</span>
+          </a>
+        </li>
+        {pages}
+        <li className={`page-item ${disableNext ? "disabled" : ""}`}>
+          <a className="page-link" onClick={() => this.onNext(disableNext)}>
+            <span>&raquo;</span>
+            <span className="sr-only">Next</span>
+          </a>
+        </li>
+      </ul>
+    );
   }
 
   render() {
