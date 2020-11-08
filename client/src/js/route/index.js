@@ -6,6 +6,7 @@ import {
 import asyncComponent from "./components/AsyncComponent";
 import AppNavigation from "./components/AppNavigation";
 import Header from "./components/Header";
+import Layout from "./components/Layout";
 import { getToken } from "../utils";
 
 require("../sass/styles.scss");
@@ -25,7 +26,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (isAuthenticated ? (
-      <Component {...props} />
+      <Component {...props} {...rest} />
     ) : (
         <Redirect
           to={{
@@ -60,7 +61,7 @@ class App extends React.Component {
             <div>
                 <Header />
                 <AppNavigation />
-                <div className="page-content">
+                <Layout>
                   <Route exact path="/" component={RedirectToDashboard} />
                   <AuthRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
                   <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
@@ -75,7 +76,7 @@ class App extends React.Component {
                   <PrivateRoute exact path="/member/:type" component={asyncComponent(() => import("../pages/Member/Detail"))} />
                   <PrivateRoute path="/peminjaman-list" component={asyncComponent(() => import("../pages/Peminjaman"))} />
                   <PrivateRoute exact path="/peminjaman/pinjam" component={asyncComponent(() => import("../pages/Peminjaman/Detail"))} />
-                </div>
+                </Layout>
             </div>
         </Route>
       </Switch>

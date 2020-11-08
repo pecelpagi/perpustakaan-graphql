@@ -27,7 +27,7 @@ class Table extends React.Component {
   renderTableHeader = columns => (
         <thead>
             <tr>
-                {columns.map(x => (<th>{x.title}</th>))}
+                {columns.map(x => (<th key={x.id}>{x.title}</th>))}
             </tr>
         </thead>
   )

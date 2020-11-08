@@ -23,7 +23,27 @@ class Category extends React.Component {
   }
 
   componentDidMount = () => {
+    const { assignButtons, assignBreadcrumbs } = this.props;
+
+    assignButtons([{
+      id: "1", title: "Tambah Data", icon: "fa fa-plus-square", clickEvent: () => this.callCreateHandler(),
+    }]);
+
+    assignBreadcrumbs([
+      {
+        label: "App", link: "#",
+      },
+      {
+        label: "Koleksi Pustaka", link: "#",
+      },
+      "Daftar Kategori",
+    ]);
+
     this.fetchData();
+  }
+
+  callCreateHandler = () => {
+    // 
   }
 
   fetchData = async () => {
