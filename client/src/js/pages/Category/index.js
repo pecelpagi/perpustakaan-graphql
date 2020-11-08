@@ -60,10 +60,22 @@ class Category extends React.Component {
         <Table
           columns={columns}
           data={data}
-          withWrapperRender={({ makeTable }) => (
+          withWrapperRender={({ makeTable, InputSearch, PageSize }) => (
             <div className="panel panel-default">
               <div className="panel-heading">
-                <h3 className="panel-title">Daftar Kategori</h3>
+                <div className="row">
+                  <div className="col-sm-3">
+                    <h3 className="panel-title">Daftar Kategori</h3>
+                  </div>
+                  <div className="col-sm-9">
+                    <div className="displayCount">
+                      <PageSize />
+                    </div>
+                    <div className="filter-container">
+                      <InputSearch />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="panel-body">
                 {makeTable()}

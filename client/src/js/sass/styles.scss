@@ -44,10 +44,32 @@ body {
   margin: 0 auto;
   top: 3em;
 }
+.panel {
+  box-shadow: none;
+    border: none;
+}
 .panel-heading {
+  border-color: #efefef !important;
   background-color: #FFF !important;
   .panel-title {
     font-weight: 600;
+    line-height: 33px;
+    font-size: 18px;
+  }
+  .displayCount {
+    float: right;
+    margin-left: 15px;
+    width: 70px;
+  }
+  .filter-container {
+    float: right;
+    max-width: 210px;
+    margin-left: 15px;
+  }
+  .form-control {
+    line-height: 22px;
+    height: 36px;
+    padding: 6px 15px;
   }
 }
 label {
@@ -66,4 +88,35 @@ label {
 }
 .form-group + .error {
   color: #dd4b39;
+}
+.form-group.style-select {
+  .form-control {
+    -webkit-appearance: none;
+  }
+  &:before {
+    content: "\F107";
+    font-family: FontAwesome;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    background: #fdfdfd;
+    z-index: 2;
+    pointer-events: none;
+    width: 20px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+}
+.panel-heading {
+  .form-group.style-select:before {
+    color: #b0bec5;
+    content: "\F107";
+    font-size: 18px;
+    right: 24px;
+    top: 19px;
+    background: #fff;
+    z-index: 1;
+    width: 17px;
+    text-align: center;
+}
 }
