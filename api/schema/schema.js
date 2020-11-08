@@ -40,6 +40,29 @@ const CategoryType = new GraphQLObjectType({
     }),
 });
 
+const MetaDataType = new GraphQLObjectType({
+    name: 'MetaData',
+    fields: () => ({
+        total_page: { type: GraphQLInt },
+    }),
+});
+
+const getMetaData = async (args) => {
+    let filter = {};
+
+    if (args.search) {
+        filter = {
+            name: new RegExp(args.search, "i"),
+        }
+    }
+    const totalData = await Category.countDocuments(filter);
+    const totalPage = Math.ceil(totalData / args.limit);
+
+    return {
+        total_page: totalPage,
+    };
+}
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -51,10 +74,44 @@ const RootQuery = new GraphQLObjectType({
         },
         categories: {
             type: new GraphQLList(CategoryType),
+            args: { 
+                skip: { type: GraphQLInt },
+                limit: { type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
             resolve(parent, args) {
-                return Category.find();
+                let filter = {};
+
+                if (args.search) {
+                    filter = {
+                        name: new RegExp(args.search, "i"),
+                    }
+                }
+
+                let findData = Category.find(filter);
+                
+                if (args.skip) {
+                    findData = findData.skip(args.skip);
+                }
+
+                if (args.limit) {
+                    findData = findData.limit(args.limit);
+                }
+
+                return findData;
             }
         },
+        meta_data: {
+            type: MetaDataType,
+            args: {
+                collection: { type: GraphQLString },
+                limit: {type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                return getMetaData(args);
+            }
+        }
     }
 });
 
