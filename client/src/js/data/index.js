@@ -1,6 +1,10 @@
 import { gql } from "@apollo/client";
 import * as Util from "../utils";
 
+const CollectionType = {
+  CATEGORY: "Category",
+};
+
 export const getUsers = async () => {
   const res = await Util.graphqlClient
     .query({
@@ -19,15 +23,19 @@ export const getUsers = async () => {
 };
 
 
-export const getCategories = async () => {
+export const getCategories = async (payload) => {
   const res = await Util.graphqlClient
     .query({
+      variables: Object.assign({}, payload, { collection: CollectionType.CATEGORY }),
       query: gql`
-                  query {
-                      categories {
+                  query Categories($skip: Int, $limit: Int, $collection: String) {
+                      categories(skip: $skip, limit: $limit) {
                           id
                           code
                           name
+                      }
+                      meta_data(collection: $collection, limit: $limit) {
+                        total_page
                       }
                   }
     `,

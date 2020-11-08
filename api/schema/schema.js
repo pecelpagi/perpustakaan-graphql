@@ -98,7 +98,13 @@ const RootQuery = new GraphQLObjectType({
                     findData = findData.limit(args.limit);
                 }
 
-                return findData;
+                return new Promise(function(resolve, reject) {
+                    findData.then((res) => {
+                        setTimeout(() => {
+                            resolve(res);
+                        }, 1);
+                    })
+                });
             }
         },
         meta_data: {

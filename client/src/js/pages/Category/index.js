@@ -38,28 +38,25 @@ class Category extends React.Component {
       },
       "Daftar Kategori",
     ]);
-
-    this.fetchData();
   }
 
   callCreateHandler = () => {
     // 
   }
 
-  fetchData = async () => {
-    const res = await graphqlApi.getCategories();
+  onFetchData = async (state) => {
+    const res = await graphqlApi.getCategories(state);
+    const { categories, meta_data: metaData } = res;
 
-    this.setState({ data: res.categories });
+    return { data: categories, totalPage: metaData.totalPage };
   }
 
   render() {
-    const { data } = this.state;
-
     return (
       <div>
         <Table
           columns={columns}
-          data={data}
+          onFetch={this.onFetchData}
           withWrapperRender={({ makeTable, InputSearch, PageSize }) => (
             <div className="panel panel-default">
               <div className="panel-heading">
