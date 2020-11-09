@@ -64,7 +64,7 @@ class Table extends React.Component {
   )
 
   onChangeLimitData = (val) => {
-    this.setState({ limit: val }, () => {
+    this.setState({ limit: val, page: 0 }, () => {
       this.forceRefetch();
     });
   }
@@ -104,7 +104,7 @@ class Table extends React.Component {
 
     return (
       <div>
-        <table className="table table-bordered mb-reset">
+        <table className="table table-hover mb-reset">
           {this.renderTableHeader(columns)}
           {this.renderTableBody(columns, data)}
         </table>

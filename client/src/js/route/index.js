@@ -69,10 +69,10 @@ class App extends React.Component {
                   <PrivateRoute path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />
                   <PrivateRoute exact path="/book/:type" component={asyncComponent(() => import("../pages/Book/Detail"))} />
                   <PrivateRoute path="/categories" component={asyncComponent(() => import("../pages/Category"))} />
-                  <PrivateRoute path="/category/:type/:id" component={asyncComponent(() => import("../pages/Category/Detail"))} />
+                  <PrivateRoute exact path="/category/:type/:id" component={asyncComponent(() => import("../pages/Category/Detail"))} />
                   <PrivateRoute exact path="/category/:type" component={asyncComponent(() => import("../pages/Category/Detail"))} />
                   <PrivateRoute path="/members" component={asyncComponent(() => import("../pages/Member"))} />
-                  <PrivateRoute path="/member/:type/:id" component={asyncComponent(() => import("../pages/Member/Detail"))} />
+                  <PrivateRoute exact path="/member/:type/:id" component={asyncComponent(() => import("../pages/Member/Detail"))} />
                   <PrivateRoute exact path="/member/:type" component={asyncComponent(() => import("../pages/Member/Detail"))} />
                   <PrivateRoute path="/peminjaman-list" component={asyncComponent(() => import("../pages/Peminjaman"))} />
                   <PrivateRoute exact path="/peminjaman/pinjam" component={asyncComponent(() => import("../pages/Peminjaman/Detail"))} />

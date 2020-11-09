@@ -61,3 +61,21 @@ export const login = async (payload) => {
 
   return res.data.login;
 };
+
+export const createCategory = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation AddCategory($code: String!, $name: String!) {
+                    addCategory(code: $code, name: $name) {
+                      id
+                      code
+                      name
+                    }
+                }
+  `,
+    });
+
+  return res.data.addCategory;
+};

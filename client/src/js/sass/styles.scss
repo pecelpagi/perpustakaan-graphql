@@ -121,7 +121,19 @@ label {
   }
 }
 .pagination {
+  > li > a {
+    color: #019292;
+  }
   a:hover {
+    cursor: pointer;
+  }
+  > .active > a {
+    background: #00b7b5 !important;
+    border-color: #00b7b5 !important;
+  }
+}
+.table-hover tbody tr {
+  &:hover {
     cursor: pointer;
   }
 }

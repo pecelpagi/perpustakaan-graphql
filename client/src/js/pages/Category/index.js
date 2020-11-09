@@ -41,7 +41,8 @@ class Category extends React.Component {
   }
 
   callCreateHandler = () => {
-    // 
+    const { history } = this.props;
+    history.push("/category/create");
   }
 
   onFetchData = async (state) => {

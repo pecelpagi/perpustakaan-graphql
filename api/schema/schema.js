@@ -124,6 +124,20 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        addCategory: {
+            type: CategoryType,
+            args: {
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                name: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                let category = new Category({
+                    code: args.code,
+                    name: args.name,
+                });
+                return category.save();
+            }
+        },
         login: {
             type: LoginType,
             args: {
