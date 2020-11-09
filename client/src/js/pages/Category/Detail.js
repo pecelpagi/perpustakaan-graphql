@@ -90,7 +90,20 @@ class CategoryDetail extends React.Component {
   }
 
   setupDetailData = async (id) => {
-    // detal data
+    const res = await graphqlApi.getCategory(id);
+
+    const { category: data } = res;
+    const newState = {
+      id: data.id,
+      type: "edit",
+      form: {
+        code: data.code,
+        name: data.name,
+      },
+    };
+
+    this.setupBreadcrumbs(data.name);
+    this.setState(newState);
   }
 
   changeValueHandler = async (type, val, e) => {
@@ -186,11 +199,14 @@ class CategoryDetail extends React.Component {
     if (isFormValid) {
       if (type === "create") {
         await graphqlApi.createCategory(form);
-
-        this.gotoBasePath();
       } else {
-        // update data
+        const payload = {
+          id,
+          ...form,
+        };
+        await graphqlApi.updateCategory(payload);
       }
+      this.gotoBasePath();
     } else {
       this.updateButtonsState(false, true);
     }

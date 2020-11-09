@@ -19,11 +19,13 @@ class Table extends React.Component {
     })).isRequired,
     onFetch: PropTypes.func,
     withWrapperRender: PropTypes.func,
+    rowClick: PropTypes.func,
   }
 
   static defaultProps = {
     withWrapperRender: undefined,
     onFetch: () => {},
+    rowClick: () => {},
   }
 
   constructor(props) {
@@ -88,15 +90,19 @@ class Table extends React.Component {
     </thead>
   )
 
-  renderTableBody = (columns, data) => (
-    <tbody>
-      {data.map((x, i) => (
-        <tr key={i}>
-          {columns.map(col => (<td key={`${i}${col.id}`}>{x[col.id]}</td>))}
-        </tr>
-      ))}
-    </tbody>
-  )
+  renderTableBody = (columns, data) => {
+    const { rowClick } = this.props;
+
+    return (
+      <tbody>
+        {data.map((x, i) => (
+          <tr key={i} onClick={() => { rowClick(x); }}>
+            {columns.map(col => (<td key={`${i}${col.id}`}>{x[col.id]}</td>))}
+          </tr>
+        ))}
+      </tbody>
+    );
+  }
 
   renderTable = () => {
     const { data } = this.state;

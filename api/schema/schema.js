@@ -117,7 +117,14 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 return getMetaData(args);
             }
-        }
+        },
+        category: {
+            type: CategoryType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                return Category.findById(args.id);
+            }
+        },
     }
 });
 
@@ -136,6 +143,21 @@ const Mutation = new GraphQLObjectType({
                     name: args.name,
                 });
                 return category.save();
+            }
+        },
+        updateCategory: {
+            type: CategoryType,
+            args: {
+                id: { type: GraphQLID },
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                name: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                let payload = {
+                    code: args.code,
+                    name: args.name,
+                };
+                return Category.findByIdAndUpdate(args.id, payload);
             }
         },
         login: {

@@ -40,6 +40,11 @@ class Category extends React.Component {
     ]);
   }
 
+  onClickRow = (data) => {
+    const { history } = this.props;
+    history.push(`/category/edit/${data.id}`);
+  }
+
   callCreateHandler = () => {
     const { history } = this.props;
     history.push("/category/create");
@@ -56,6 +61,7 @@ class Category extends React.Component {
     return (
       <div>
         <Table
+          rowClick={this.onClickRow}
           columns={columns}
           onFetch={this.onFetchData}
           withWrapperRender={({ makeTable, InputSearch, PageSize }) => (

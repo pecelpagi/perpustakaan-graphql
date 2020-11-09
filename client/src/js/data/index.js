@@ -44,6 +44,24 @@ export const getCategories = async (payload) => {
   return res.data;
 };
 
+export const getCategory = async (id) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: { id },
+      query: gql`
+                  query Category($id: ID!) {
+                      category(id: $id) {
+                          id
+                          code
+                          name
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
+};
+
 export const login = async (payload) => {
   const res = await Util.graphqlClient
     .mutate({
@@ -78,4 +96,22 @@ export const createCategory = async (payload) => {
     });
 
   return res.data.addCategory;
+};
+
+export const updateCategory = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation UpdateCategory($id: ID!, $code: String!, $name: String!) {
+                    updateCategory(id: $id, code: $code, name: $name) {
+                      id
+                      code
+                      name
+                    }
+                }
+  `,
+    });
+
+  return res.data.updateCategory;
 };
