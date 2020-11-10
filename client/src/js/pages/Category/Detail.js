@@ -217,6 +217,15 @@ class CategoryDetail extends React.Component {
     });
   }
 
+  onDelete = async () => {
+    const {
+      id,
+    } = this.state;
+
+    await graphqlApi.deleteCategory(id);
+    this.gotoBasePath();
+  }
+
   render = () => {
     const {
       footerButtons, type,
@@ -234,8 +243,13 @@ class CategoryDetail extends React.Component {
           </div>
           <div className="panel-body">
             {this.formComponent()}
-            <div className="text-right">
-              {footerButtons.map((x, i) => (<button key={x.id} style={(i === footerButtons.length - 1) ? {} : { marginRight: "10px" }} type="button" className={`btn ${x.type ? `btn-${x.type}` : ""}`} onClick={!x.isDisabled ? x.action : () => { }} disabled={x.isDisabled}>{x.content}</button>))}
+            <div className="row">
+              <div className="col-sm-8">
+                {type === "edit" ? <button type="button" className="btn" onClick={this.onDelete}><i className="fa fa-trash-o" /></button> : null}
+              </div>
+              <div className="col-sm-4 text-right">
+                {footerButtons.map((x, i) => (<button key={x.id} style={(i === footerButtons.length - 1) ? {} : { marginRight: "10px" }} type="button" className={`btn ${x.type ? `btn-${x.type}` : ""}`} onClick={!x.isDisabled ? x.action : () => { }} disabled={x.isDisabled}>{x.content}</button>))}
+              </div>
             </div>
           </div>
         </div>

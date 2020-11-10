@@ -92,7 +92,7 @@ export const createCategory = async (payload) => {
                       name
                     }
                 }
-  `,
+                `,
     });
 
   return res.data.addCategory;
@@ -110,8 +110,26 @@ export const updateCategory = async (payload) => {
                       name
                     }
                 }
-  `,
+                `,
     });
 
   return res.data.updateCategory;
+};
+
+export const deleteCategory = async (id) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: { id },
+      mutation: gql`
+                mutation DeleteCategory($id: ID!) {
+                    deleteCategory(id: $id) {
+                      id
+                      code
+                      name
+                    }
+                }
+                `,
+    });
+
+  return res.data.deleteCategory;
 };

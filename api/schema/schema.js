@@ -160,6 +160,13 @@ const Mutation = new GraphQLObjectType({
                 return Category.findByIdAndUpdate(args.id, payload);
             }
         },
+        deleteCategory: {
+            type: CategoryType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                return Category.findByIdAndRemove(args.id);
+            }
+        },
         login: {
             type: LoginType,
             args: {
