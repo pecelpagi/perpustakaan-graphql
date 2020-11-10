@@ -207,9 +207,10 @@ class CategoryDetail extends React.Component {
         await graphqlApi.updateCategory(payload);
       }
       this.gotoBasePath();
-    } else {
-      this.updateButtonsState(false, true);
+      return;
     }
+
+    this.updateButtonsState(false, true);
 
     this.setState({
       isFormSubmitted: true,
