@@ -137,3 +137,37 @@ label {
     cursor: pointer;
   }
 }
+.image-preview-wrapper {
+  width: 180px;
+  .preview {
+    background: #999;
+    min-height: 220px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    .btn-wrapper {
+        position: absolute;
+        top: 6px;
+        right: 0px;
+        .btn-edit, .btn-remove {
+            background: #FFF;
+            border-radius: 50%;
+            height: 36px;
+            width: 36px;
+            padding: 0px;
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #c5c5c5;
+            margin-right: 5px;
+            .fa {
+                color: #001a35;
+                margin: 0px;
+            }
+        }
+    }
+    img {
+        width: 100%;
+    }
+  }
+}
