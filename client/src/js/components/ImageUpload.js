@@ -155,7 +155,7 @@ class ImageUpload extends React.Component {
             ) }
             { isImageFilled && <img src={createPathPreview(imgValue)} /> }
           </div>
-          <button type="button" onClick={this.chooseFile} className="btn btn-default btn-flat btn-block">Unggah Gambar</button>
+          <button type="button" onClick={this.chooseFile} className="btn btn-default btn-block btn-upload">Unggah Gambar</button>
         </div>
         {(errorText && errorText.length > 0) && <span className="help-block">{errorText}</span>}
         <input ref={(c) => { this.fileUpload = c; }} onChange={this.changeFileHandler} className="hidden" type="file" accept="image/*" />

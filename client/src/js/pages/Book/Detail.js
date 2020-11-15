@@ -229,7 +229,7 @@ class BookDetail extends React.Component {
               <FieldFeedback when="valueMissing">Kota terbit wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-2">
             <InputText
               label="Tahun Terbit"
               changeEvent={(val, e) => this.changeValueHandler("year", val, e)}
@@ -241,13 +241,17 @@ class BookDetail extends React.Component {
               <FieldFeedback when="valueMissing">Tahun terbit wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
-        </div>
-        <div className="row mb-sm">
-          <div className="col-sm-6">
-            <ImageUpload
-              value={form.cover}
-              changeEvent={(val) => { this.changeValueHandler("cover", val); }}
+          <div className="col-sm-2">
+            <InputText
+              label="Jumlah Koleksi"
+              changeEvent={(val, e) => this.changeValueHandler("qty", val, e)}
+              value={String(form.qty)}
+              name="qty"
+              required
             />
+            <FieldFeedbacks for="qty">
+              <FieldFeedback when="valueMissing">Jumlah Koleksi wajib diisi</FieldFeedback>
+            </FieldFeedbacks>
           </div>
         </div>
       </FormValidation>
@@ -255,10 +259,10 @@ class BookDetail extends React.Component {
   }
 
   render() {
-    const { type, footerButtons } = this.state;
+    const { type, footerButtons, form } = this.state;
 
     return (
-      <div style={{ width: "80%", position: "relative", margin: "0px auto" }}>
+      <div style={{ width: "100%", position: "relative", margin: "0px auto" }}>
         <div className="panel panel-default">
           <div className="panel-heading">
             <div className="row mb-0">
@@ -268,7 +272,17 @@ class BookDetail extends React.Component {
             </div>
           </div>
           <div className="panel-body">
-            {this.formComponent()}
+            <div className="row mb-sm">
+              <div className="col-sm-9">
+                {this.formComponent()}
+              </div>
+              <div className="col-sm-3 text-center">
+                <ImageUpload
+                  value={form.cover}
+                  changeEvent={(val) => { this.changeValueHandler("cover", val); }}
+                />
+              </div>
+            </div>
             <div className="row">
               <div className="col-sm-8">
                 {type === "edit" ? <button type="button" className="btn" onClick={this.onDelete}><i className="fa fa-trash-o" /></button> : null}

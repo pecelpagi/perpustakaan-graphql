@@ -74,7 +74,7 @@ class ModalPopup extends React.Component {
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close disabled" onClick={this.hideModalHandler} aria-label="Close">
-                <span aria-hidden="true">Ã—</span></button>
+                <span aria-hidden="true">×</span></button>
               <h4 className="modal-title text-left">{title}</h4>
             </div>
             <div className="modal-body text-center">

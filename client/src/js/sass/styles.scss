@@ -170,4 +170,23 @@ label {
         width: 100%;
     }
   }
+  .btn-upload {
+    border: 1px solid #e2e2e2;
+    background: #FFF !important;
+    border-radius: 0px;
+    font-weight: normal !important;
+    color: #00b7b5 !important;
+  }
+}
+.modal {
+  background: #33333373;
+}
+.modal-content {
+  border-radius: 4px;
+  box-shadow: none;
+  border: 1px solid #a0a0a0;
+}
+.modal-header .close {
+  margin-top: -1px;
+  font-size: 26px;
 }
