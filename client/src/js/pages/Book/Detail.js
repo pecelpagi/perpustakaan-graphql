@@ -7,17 +7,13 @@ import ImageUpload from "~/components/ImageUpload";
 import FormValidation from "~/components/FormValidation";
 import BrowseData from "~/components/BrowseData";
 import * as graphqlApi from "../../data";
+import createCode from "./helper";
 
 const categoryColumns = [
   {
-    accessor: "code",
-    Header: "Kode",
-    width: "30%",
-  },
-  {
     accessor: "name",
-    Header: "Nama Kategori",
-    width: "70%",
+    Header: "Kategori",
+    width: "100%",
   },
 ];
 class BookDetail extends React.Component {
@@ -55,7 +51,6 @@ class BookDetail extends React.Component {
       type: "create",
       footerButtons: this.initialButtonActions,
       form: {
-        bookCallNumber: "",
         isbn: "",
         category: {
           id: "",
@@ -114,25 +109,30 @@ class BookDetail extends React.Component {
     const isFormValid = await this.form.validateForm();
 
     if (isFormValid) {
+      let payload = {
+        ...form,
+        category_id: form.category.id,
+        code: createCode(form),
+        isbn: parseInt(form.isbn, 10),
+        year: parseInt(form.year, 10),
+        qty: parseInt(form.qty, 10),
+      };
+      delete payload.category;
+
       if (type === "create") {
-        const res = { status: true };
-
-        if (res.status) {
-          this.gotoBasePath();
-          return;
-        }
+        await graphqlApi.createBook(payload);
       } else {
-        Object.assign(payload, { id });
-        const res = { status: true };
-
-        if (res.status) {
-          this.gotoBasePath();
-          return;
-        }
+        payload = {
+          id,
+          ...payload,
+        };
+        // await graphqlApi.updateCategory(payload);
       }
-    } else {
-      this.updateButtonsState(false, true);
+      this.gotoBasePath();
+      return;
     }
+
+    this.updateButtonsState(false, true);
 
     this.setState({
       isFormSubmitted: true,
@@ -209,9 +209,10 @@ class BookDetail extends React.Component {
       skip: 10 * (parseInt(state.page, 10) - 1),
     };
     const res = await graphqlApi.getCategories(payload);
+    const data = res.categories.map(x => ({ id: x.id, name: `${x.code}: ${x.name}` }));
 
     return {
-      data: res.categories,
+      data,
       payload: { total_page: res.meta_data.total_page },
     };
   }
@@ -226,7 +227,7 @@ class BookDetail extends React.Component {
           <div className="col-sm-4">
             <InputText
               label="Nomor Panggil"
-              value={String(form.bookCallNumber)}
+              value={createCode(form)}
             />
           </div>
           <div className="col-sm-4">

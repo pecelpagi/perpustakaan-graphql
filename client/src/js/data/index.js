@@ -133,3 +133,29 @@ export const deleteCategory = async (id) => {
 
   return res.data.deleteCategory;
 };
+
+export const createBook = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation AddBook(
+                    $code: String!, $isbn: Int!, $title: String!
+                    $author: String!, $publisher: String!, $city: String!
+                    $year: Int!, $cover: String!, $qty: Int!
+                ) {
+                    addBook(
+                      code: $code, isbn: $isbn, title: $title,
+                      author: $author, publisher: $publisher, city: $city,
+                      year: $year, cover: $cover, qty: $qty,
+                    ) {
+                      id
+                      code
+                      title
+                    }
+                }
+                `,
+    });
+
+  return res.data.addBook;
+};

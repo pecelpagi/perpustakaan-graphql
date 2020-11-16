@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const Constants = require('../constants');
 const User = require('../models/users');
 const Category = require('../models/categories');
+const Book = require('../models/books');
 
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
@@ -37,6 +38,22 @@ const CategoryType = new GraphQLObjectType({
         id: { type: GraphQLID },
         code: { type: GraphQLString },
         name: { type: GraphQLString },
+    }),
+});
+
+const BookType = new GraphQLObjectType({
+    name: 'Book',
+    fields: () => ({
+        id: { type: GraphQLID },
+        code: { type: GraphQLString },
+        isbn: { type: GraphQLInt },
+        title: { type: GraphQLString },
+        author: { type: GraphQLString },
+        publisher: { type: GraphQLString },
+        city: { type: GraphQLString },
+        year: { type: GraphQLInt },
+        cover: { type: GraphQLString },
+        qty: { type: GraphQLInt },
     }),
 });
 
@@ -165,6 +182,24 @@ const Mutation = new GraphQLObjectType({
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
                 return Category.findByIdAndRemove(args.id);
+            }
+        },
+        addBook: {
+            type: BookType,
+            args: {
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                isbn: { type: new GraphQLNonNull(GraphQLInt) },
+                title: { type: new GraphQLNonNull(GraphQLString) },
+                author: { type: new GraphQLNonNull(GraphQLString) },
+                publisher: { type: new GraphQLNonNull(GraphQLString) },
+                city: { type: new GraphQLNonNull(GraphQLString) },
+                year: { type: new GraphQLNonNull(GraphQLInt) },
+                cover: { type: new GraphQLNonNull(GraphQLString) },
+                qty: { type: new GraphQLNonNull(GraphQLInt) },
+            },
+            resolve(parent, args) {
+                let book = new Book(args);
+                return book.save();
             }
         },
         login: {
