@@ -3,10 +3,23 @@ import React from "react";
 import update from "immutability-helper";
 import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
 import InputText from "~/components/InputText";
-import Select from "~/components/Select";
 import ImageUpload from "~/components/ImageUpload";
 import FormValidation from "~/components/FormValidation";
+import BrowseData from "~/components/BrowseData";
+import * as graphqlApi from "../../data";
 
+const categoryColumns = [
+  {
+    accessor: "code",
+    Header: "Kode",
+    width: "30%",
+  },
+  {
+    accessor: "name",
+    Header: "Nama Kategori",
+    width: "70%",
+  },
+];
 class BookDetail extends React.Component {
   initialButtonActions = [
     {
@@ -40,12 +53,14 @@ class BookDetail extends React.Component {
       id: "",
       isFormSubmitted: false,
       type: "create",
-      categoryList: [],
       footerButtons: this.initialButtonActions,
       form: {
         bookCallNumber: "",
         isbn: "",
-        idCategory: "",
+        category: {
+          id: "",
+          name: "",
+        },
         title: "",
         author: "",
         publisher: "",
@@ -90,8 +105,57 @@ class BookDetail extends React.Component {
     history.push("/books");
   }
 
-  saveDataHandler = () => {
+  saveDataHandler = async () => {
+    const {
+      form, type, id,
+    } = this.state;
+    this.updateButtonsState(true, true);
 
+    const isFormValid = await this.form.validateForm();
+
+    if (isFormValid) {
+      if (type === "create") {
+        const res = { status: true };
+
+        if (res.status) {
+          this.gotoBasePath();
+          return;
+        }
+      } else {
+        Object.assign(payload, { id });
+        const res = { status: true };
+
+        if (res.status) {
+          this.gotoBasePath();
+          return;
+        }
+      }
+    } else {
+      this.updateButtonsState(false, true);
+    }
+
+    this.setState({
+      isFormSubmitted: true,
+    });
+  }
+
+  changeCategoryHandler = (val) => {
+    const { form } = this.state;
+    const newValue = update(form, {
+      category: { $set: { id: val.id, name: val.name } },
+    });
+
+    this.setState({ form: newValue }, () => {
+      this.validateCategory();
+    });
+  }
+
+  validateCategory = async () => {
+    const { isFormSubmitted } = this.state;
+
+    if (isFormSubmitted) {
+      await this.onInputChangeValidate({ target: this.categoryHidden });
+    }
   }
 
   changeValueHandler = async (type, val, e) => {
@@ -139,9 +203,22 @@ class BookDetail extends React.Component {
 
   }
 
+  onFetchCategory = async (state) => {
+    const payload = {
+      limit: 10,
+      skip: 10 * (parseInt(state.page, 10) - 1),
+    };
+    const res = await graphqlApi.getCategories(payload);
+
+    return {
+      data: res.categories,
+      payload: { total_page: res.meta_data.total_page },
+    };
+  }
+
   formComponent = () => {
     const {
-      form, categoryList,
+      form,
     } = this.state;
     return (
       <FormValidation ref={(c) => { this.form = c; }}>
@@ -165,21 +242,32 @@ class BookDetail extends React.Component {
             </FieldFeedbacks>
           </div>
           <div className="col-sm-4">
-            <Select
-              label="Kode Klasifikasi"
-              data={categoryList}
-              value={form.idCategory}
-              changeEvent={(val, e) => this.changeValueHandler("idCategory", val, e)}
-              name="idCategory"
-              required
-            />
-            <FieldFeedbacks for="idCategory">
-              <FieldFeedback when="valueMissing">Kode Klasifikasi wajib diisi</FieldFeedback>
+            <div className="form-group position-relative mb-reset">
+              <BrowseData
+                label="Kategori"
+                placeholder="Pilih Kategori"
+                columns={categoryColumns}
+                value={form.category}
+                changeEvent={this.changeCategoryHandler}
+                onFetch={this.onFetchCategory}
+              />
+              <input
+                ref={(c) => { this.categoryHidden = c; }}
+                className="hide-for-validation"
+                name="categoryHidden"
+                type="text"
+                value={form.category.id}
+                onChange={() => { }}
+                required
+              />
+            </div>
+            <FieldFeedbacks for="categoryHidden">
+              <FieldFeedback when="valueMissing">Kategori wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
         </div>
         <div className="row mb-sm">
-          <div className="col-sm-6">
+          <div className="col-sm-4">
             <InputText
               label="Judul"
               changeEvent={(val, e) => this.changeValueHandler("title", val, e)}
@@ -191,7 +279,7 @@ class BookDetail extends React.Component {
               <FieldFeedback when="valueMissing">Judul wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
-          <div className="col-sm-6">
+          <div className="col-sm-4">
             <InputText
               label="Nama Pengarang"
               changeEvent={(val, e) => this.changeValueHandler("author", val, e)}
@@ -201,6 +289,18 @@ class BookDetail extends React.Component {
             />
             <FieldFeedbacks for="author">
               <FieldFeedback when="valueMissing">Nama pengarang wajib diisi</FieldFeedback>
+            </FieldFeedbacks>
+          </div>
+          <div className="col-sm-4">
+            <InputText
+              label="Jumlah Koleksi"
+              changeEvent={(val, e) => this.changeValueHandler("qty", val, e)}
+              value={String(form.qty)}
+              name="qty"
+              required
+            />
+            <FieldFeedbacks for="qty">
+              <FieldFeedback when="valueMissing">Jumlah Koleksi wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
         </div>
@@ -229,7 +329,7 @@ class BookDetail extends React.Component {
               <FieldFeedback when="valueMissing">Kota terbit wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
-          <div className="col-sm-2">
+          <div className="col-sm-4">
             <InputText
               label="Tahun Terbit"
               changeEvent={(val, e) => this.changeValueHandler("year", val, e)}
@@ -239,18 +339,6 @@ class BookDetail extends React.Component {
             />
             <FieldFeedbacks for="year">
               <FieldFeedback when="valueMissing">Tahun terbit wajib diisi</FieldFeedback>
-            </FieldFeedbacks>
-          </div>
-          <div className="col-sm-2">
-            <InputText
-              label="Jumlah Koleksi"
-              changeEvent={(val, e) => this.changeValueHandler("qty", val, e)}
-              value={String(form.qty)}
-              name="qty"
-              required
-            />
-            <FieldFeedbacks for="qty">
-              <FieldFeedback when="valueMissing">Jumlah Koleksi wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
         </div>
@@ -265,7 +353,7 @@ class BookDetail extends React.Component {
       <div style={{ width: "100%", position: "relative", margin: "0px auto" }}>
         <div className="panel panel-default">
           <div className="panel-heading">
-            <div className="row mb-0">
+            <div className="row mb-reset">
               <div className="col-sm-12">
                 <h3 className="panel-title">{type === "create" ? "Tambah" : "Edit"} Buku</h3>
               </div>

@@ -25,6 +25,16 @@ body {
     background-color: #28c8c7 !important;
   }
 }
+.btn-flat {
+  border-radius: 0px;
+}
+.input-group-btn:last-child>.btn {
+  height: 40px;
+  width: 44px;
+  color: #00b7b5 !important;
+  background: #FFF !important;
+  border: 1px solid #e2e2e2;
+}
 .breadcrumb {
   padding-left: 0px;
   font-size: 12px;
@@ -189,4 +199,15 @@ label {
 .modal-header .close {
   margin-top: -1px;
   font-size: 26px;
+}
+.hide-for-validation {
+  height: 0px;
+  width: 0px;
+  float: left;
+  opacity: 0;
+  position: absolute;
+  bottom: 15px;
+}
+.position-relative {
+ position: relative;
 }

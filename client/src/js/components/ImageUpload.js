@@ -144,7 +144,7 @@ class ImageUpload extends React.Component {
     const isImageFilled = (imgValue && imgValue.length > 0);
 
     return (
-      <div style={style} className={`form-group mb-0 ${(errorText && errorText.length > 0) ? "has-error" : ""}`}>
+      <div style={style} className={`form-group mb-reset ${(errorText && errorText.length > 0) ? "has-error" : ""}`}>
         <div className="image-preview-wrapper">
           <div className="preview">
             { isImageFilled && (

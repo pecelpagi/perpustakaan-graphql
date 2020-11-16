@@ -1,0 +1,172 @@
+.popup-data-modal {
+    .modal-header {
+        background: #00B7B4;
+        border-bottom: 0px;
+    }
+    .modal-title {
+        color: #FFF;
+    }
+    .modal-content {
+        border-radius: 0px;
+        border: 0px;    
+    }
+    .form-control:focus {
+        border: 0px;
+        box-shadow: none;
+    }
+}
+.popup-data {
+    position: relative;
+}
+.popup-data__input-search {
+    border: 0px;
+}
+.popup-data__header-row {
+    position: relative;
+    width: 100%;
+    background: #f4f8f9;
+    padding-right: 2%;
+}
+.popup-data__header-column {
+    display: inline-block;
+    background: #f4f8f9;
+    color: #78909c;
+    padding: 8px 13px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    .fa {
+        margin-left: 5px;
+    }
+    &:hover {
+        cursor: pointer;
+    }
+}
+.popup-data__body {
+    position: relative;
+}
+.popup-data__row-content {
+    border-bottom: 1px solid #e4e4e4;
+    display: block;
+    &:last-child {
+        border: 0px;        
+    }
+    &:hover {
+        cursor: pointer;
+        background: #f3f3f3;
+    }
+}
+.popup-data__row-content-column {
+    display: inline-block;
+    padding: 13px 13px;
+}
+
+.popup-overlay {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background: rgba(255, 255, 255, 0.72);
+    color: #585858;
+    height: 100%;
+}
+.popup-overlay--show {
+    display: block,
+}
+.popup-overlay--hide {
+    display: none,
+}
+.popup-overlay__content {
+    display: table;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+.popup-overlay__content-caption {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.ReactVirtualized__Grid.ReactVirtualized__List {
+    outline: none !important;
+}
+.ReactVirtualized__Grid.ReactVirtualized__List::-webkit-scrollbar {
+    width: 8px;
+}
+.ReactVirtualized__Grid.ReactVirtualized__List::-webkit-scrollbar-thumb {
+    background: #888;
+}
+.ReactVirtualized__Grid.ReactVirtualized__List::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.radio-wrapper {
+    position: absolute;
+    top: -2px;
+    right: 0px;
+    /* The container */
+    .radio-container {
+        display: inline-block;
+        position: relative;
+        padding-left: 25px;
+        margin-right: 15px;
+        cursor: pointer;
+        font-size: 14px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    /* Hide the browser's default radio button */
+    .radio-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 2px;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: #FFF;
+        border-radius: 50%;
+        border: 1px solid #888;
+    }
+    
+    /* On mouse-over, add a grey background color */
+    .radio-container:hover input ~ .checkmark {
+        background-color: #FFF;
+        border: 1px solid #00B7B4;
+    }
+    
+    /* When the radio button is checked, add a blue background */
+    .radio-container input:checked ~ .checkmark {
+        background-color: #00B7B4;
+        border: 1px solid #00B7B4;
+    }
+    
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    
+    /* Show the indicator (dot/circle) when checked */
+    .radio-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    
+    /* Style the indicator (dot/circle) */
+    .radio-container .checkmark:after {
+        top: 4px;
+        left: 4px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #FFFFFF !important;
+    }    
+}

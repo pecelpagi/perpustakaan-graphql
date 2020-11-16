@@ -235,7 +235,7 @@ class CategoryDetail extends React.Component {
       <div style={{ width: "80%", position: "relative", margin: "0px auto" }}>
         <div className="panel panel-default">
           <div className="panel-heading">
-            <div className="row mb-0">
+            <div className="row mb-reset">
               <div className="col-sm-12">
                 <h3 className="panel-title">{type === "create" ? "Tambah" : "Edit"} Kategori</h3>
               </div>
