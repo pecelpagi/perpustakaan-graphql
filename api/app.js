@@ -3,6 +3,7 @@ const graphqlHTTP = require('express-graphql');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const schema = require('./schema/schema');
+const uploadFile = require('./upload');
 
 const app = express();
 
@@ -12,10 +13,12 @@ mongoose.connection.once('open', () => {
 });
 
 app.use(cors());
+app.use(express.static('public'));
 app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true,
 }));
+app.use("/api/uploadFile", uploadFile);
 
 app.listen(3301, () => {
     console.log('listening on port 3301');

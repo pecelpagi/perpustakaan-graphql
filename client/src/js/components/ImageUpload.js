@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Cropper from "react-cropper";
 import ModalPopup from "./ModalPopup";
+import uploadFile from "../data/uploadFile";
 
 require("cropperjs/dist/cropper.css");
 
@@ -16,7 +17,6 @@ const createPathPreview = (rawPath) => {
 
   return rawPath;
 };
-const uploadFile = () => {};
 const getFileName = (length = 4) => {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -114,7 +114,7 @@ class ImageUpload extends React.Component {
   }
 
   doUploadingFile = async (file) => {
-    const res = await uploadFile({ photo: file });
+    const res = await uploadFile(file);
 
     if (res.status) {
       const { path } = res.data;
