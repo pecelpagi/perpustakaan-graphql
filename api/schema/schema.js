@@ -66,14 +66,21 @@ const MetaDataType = new GraphQLObjectType({
 
 const getMetaData = async (args) => {
     let filter = {};
+    let totalPage = 0;
 
     if (args.search) {
         filter = {
             name: new RegExp(args.search, "i"),
         }
     }
-    const totalData = await Category.countDocuments(filter);
-    const totalPage = Math.ceil(totalData / args.limit);
+
+    if (args.collection === 'Category') {
+        const totalData = await Category.countDocuments(filter);
+        totalPage = Math.ceil(totalData / args.limit);
+    } else if(args.collection === 'Book') {
+        const totalData = await Book.countDocuments(filter);
+        totalPage = Math.ceil(totalData / args.limit);
+    }
 
     return {
         total_page: totalPage,
@@ -122,6 +129,35 @@ const RootQuery = new GraphQLObjectType({
                         }, 1);
                     })
                 });
+            }
+        },
+        books: {
+            type: new GraphQLList(BookType),
+            args: { 
+                skip: { type: GraphQLInt },
+                limit: { type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                let filter = {};
+
+                if (args.search) {
+                    filter = {
+                        name: new RegExp(args.search, "i"),
+                    }
+                }
+
+                let findData = Book.find(filter);
+                
+                if (args.skip) {
+                    findData = findData.skip(args.skip);
+                }
+
+                if (args.limit) {
+                    findData = findData.limit(args.limit);
+                }
+
+                return findData;
             }
         },
         meta_data: {
@@ -188,7 +224,7 @@ const Mutation = new GraphQLObjectType({
             type: BookType,
             args: {
                 code: { type: new GraphQLNonNull(GraphQLString) },
-                isbn: { type: new GraphQLNonNull(GraphQLInt) },
+                isbn: { type: new GraphQLNonNull(GraphQLString) },
                 title: { type: new GraphQLNonNull(GraphQLString) },
                 author: { type: new GraphQLNonNull(GraphQLString) },
                 publisher: { type: new GraphQLNonNull(GraphQLString) },

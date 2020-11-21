@@ -113,7 +113,7 @@ class BookDetail extends React.Component {
         ...form,
         category_id: form.category.id,
         code: createCode(form),
-        isbn: parseInt(form.isbn, 10),
+        isbn: String(form.isbn),
         year: parseInt(form.year, 10),
         qty: parseInt(form.qty, 10),
       };

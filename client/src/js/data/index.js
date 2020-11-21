@@ -3,6 +3,7 @@ import * as Util from "../utils";
 
 const CollectionType = {
   CATEGORY: "Category",
+  BOOK: "Book",
 };
 
 export const getUsers = async () => {
@@ -22,6 +23,28 @@ export const getUsers = async () => {
   return res.data.users;
 };
 
+export const getBooks = async (payload) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: Object.assign({}, payload, { collection: CollectionType.BOOK }),
+      query: gql`
+                  query Books($skip: Int, $limit: Int, $collection: String) {
+                      books(skip: $skip, limit: $limit) {
+                          id
+                          code
+                          title
+                          author
+                          qty
+                      }
+                      meta_data(collection: $collection, limit: $limit) {
+                        total_page
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
+};
 
 export const getCategories = async (payload) => {
   const res = await Util.graphqlClient
@@ -140,7 +163,7 @@ export const createBook = async (payload) => {
       variables: payload,
       mutation: gql`
                 mutation AddBook(
-                    $code: String!, $isbn: Int!, $title: String!
+                    $code: String!, $isbn: String!, $title: String!
                     $author: String!, $publisher: String!, $city: String!
                     $year: Int!, $cover: String!, $qty: Int!
                 ) {

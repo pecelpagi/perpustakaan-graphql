@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const modelSchema = new Schema({
     code: String,
-    isbn: Number,
+    isbn: String,
     title: String,
     author: String,
     publisher: String,
