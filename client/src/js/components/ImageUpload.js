@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import Cropper from "react-cropper";
 import ModalPopup from "./ModalPopup";
 import uploadFile from "../data/uploadFile";
+import { createPathPreview } from "../utils";
 
 require("cropperjs/dist/cropper.css");
-
-
 
 const getFileName = (length = 4) => {
   let result = "";

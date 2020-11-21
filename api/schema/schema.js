@@ -143,7 +143,7 @@ const RootQuery = new GraphQLObjectType({
 
                 if (args.search) {
                     filter = {
-                        name: new RegExp(args.search, "i"),
+                        code: new RegExp(args.search, "i"),
                     }
                 }
 
@@ -233,8 +233,18 @@ const Mutation = new GraphQLObjectType({
                 cover: { type: new GraphQLNonNull(GraphQLString) },
                 qty: { type: new GraphQLNonNull(GraphQLInt) },
             },
-            resolve(parent, args) {
-                let book = new Book(args);
+            resolve: async (parent, args) => {
+                const filter = {
+                    code: new RegExp(args.code, "i"),
+                };
+                const findData = await Book.find(filter);
+                const newCode = `${args.code}.${findData.length + 1}`;
+
+                const payload = Object.assign({}, args, {
+                    code: newCode,
+                });
+                const book = new Book(payload);
+
                 return book.save();
             }
         },

@@ -11,7 +11,7 @@ const createCode = (state) => {
       authorShort = String(author).substring(0, 3);
     }
 
-    return `${categoryCode}-${authorShort}-${titleInitial}.1`;
+    return `${categoryCode}-${authorShort}-${titleInitial}`;
   }
 
   return "";
