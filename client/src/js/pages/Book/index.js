@@ -2,6 +2,7 @@
 import React from "react";
 import * as graphqlApi from "../../data";
 import Table from "../../components/Table";
+import { createPathPreview } from "../../utils";
 
 const columns = [
   {
@@ -15,6 +16,11 @@ const columns = [
   {
     id: "author",
     title: "Pengarang",
+  },
+  {
+    id: "cover",
+    title: "Sampul",
+    customComponent: val => (<img src={createPathPreview(val)} style={{ width: "70px" }} />),
   },
   {
     id: "qty_text",

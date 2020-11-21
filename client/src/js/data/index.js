@@ -34,6 +34,7 @@ export const getBooks = async (payload) => {
                           code
                           title
                           author
+                          cover
                           qty
                       }
                       meta_data(collection: $collection, limit: $limit) {

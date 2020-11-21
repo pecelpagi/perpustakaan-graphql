@@ -7,16 +7,8 @@ import uploadFile from "../data/uploadFile";
 
 require("cropperjs/dist/cropper.css");
 
-const API_BASE_URL = "http://localhost:3301";
-const createPathPreview = (rawPath) => {
-  if (rawPath) {
-    const path = rawPath.replace("public/", `${API_BASE_URL}/`);
 
-    return path;
-  }
 
-  return rawPath;
-};
 const getFileName = (length = 4) => {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

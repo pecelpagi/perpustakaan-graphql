@@ -1,6 +1,7 @@
 /* eslint prop-types: 0 */
 import _ from "lodash";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { API_BASE_URL } from "../constants";
 
 export const graphqlClient = new ApolloClient({
   uri: "http://localhost:3301/graphql",
@@ -28,3 +29,13 @@ export const getBasePath = () => {
 };
 
 export const ishasProperty = (obj, key) => Object.hasOwnProperty.call(obj, key);
+
+export const createPathPreview = (rawPath) => {
+  if (rawPath) {
+    const path = rawPath.replace("public/", `${API_BASE_URL}/`);
+
+    return path;
+  }
+
+  return rawPath;
+};

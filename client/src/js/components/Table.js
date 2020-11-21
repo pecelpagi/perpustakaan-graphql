@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Select from "./Select";
 import InputText from "./InputText";
+import { ishasProperty } from "../utils";
 
 const limitData = [
   { id: "5", name: "5" },
@@ -97,7 +98,7 @@ class Table extends React.Component {
       <tbody>
         {data.map((x, i) => (
           <tr key={i} onClick={() => { rowClick(x); }}>
-            {columns.map(col => (<td key={`${i}${col.id}`}>{x[col.id]}</td>))}
+            {columns.map(col => (<td key={`${i}${col.id}`}>{ishasProperty(col, "customComponent") ? col.customComponent(x[col.id]) : x[col.id]}</td>))}
           </tr>
         ))}
       </tbody>
