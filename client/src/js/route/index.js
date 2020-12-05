@@ -66,7 +66,7 @@ class App extends React.Component {
                   <AuthRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
                   <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
                   <PrivateRoute path="/books" component={asyncComponent(() => import("../pages/Book"))} />
-                  <PrivateRoute path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />
+                  <PrivateRoute exact path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />
                   <PrivateRoute exact path="/book/:type" component={asyncComponent(() => import("../pages/Book/Detail"))} />
                   <PrivateRoute path="/categories" component={asyncComponent(() => import("../pages/Category"))} />
                   <PrivateRoute exact path="/category/:type/:id" component={asyncComponent(() => import("../pages/Category/Detail"))} />

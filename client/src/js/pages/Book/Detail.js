@@ -52,6 +52,7 @@ class BookDetail extends React.Component {
       footerButtons: this.initialButtonActions,
       form: {
         isbn: "",
+        code: "",
         category: {
           id: "",
           name: "",
@@ -67,11 +68,15 @@ class BookDetail extends React.Component {
     };
   }
 
-  componentDidMount = () => {
+  componentWillMount = () => {
+    this.setupData();
+  }
+
+  setupData = async () => {
     const { match: { params } } = this.props;
 
     if (params.type === "edit") {
-      this.setState({ title: `Edit Book Detail: ${params.id}` });
+      await this.setupDetailData(params.id);
     } else {
       this.setupBreadcrumbs("Tambah Data");
     }
@@ -93,6 +98,34 @@ class BookDetail extends React.Component {
       },
       text,
     ]);
+  }
+
+  setupDetailData = async (id) => {
+    const res = await graphqlApi.getBook(id);
+
+    const { book: data } = res;
+    const newState = {
+      id: data.id,
+      type: "edit",
+      form: {
+        code: data.code,
+        isbn: data.isbn,
+        category: {
+          id: data.category.id,
+          name: data.category.name,
+        },
+        title: data.title,
+        author: data.author,
+        publisher: data.publisher,
+        city: data.city,
+        year: data.year,
+        cover: data.cover,
+        qty: data.qty,
+      },
+    };
+
+    this.setupBreadcrumbs(data.title);
+    this.setState(newState);
   }
 
   gotoBasePath = () => {
@@ -125,8 +158,9 @@ class BookDetail extends React.Component {
         payload = {
           id,
           ...payload,
+          code: form.code,
         };
-        // await graphqlApi.updateCategory(payload);
+        await graphqlApi.updateBook(payload);
       }
       this.gotoBasePath();
       return;
@@ -227,7 +261,8 @@ class BookDetail extends React.Component {
           <div className="col-sm-4">
             <InputText
               label="Nomor Panggil"
-              value={createCode(form)}
+              value={form.code}
+              disabled
             />
           </div>
           <div className="col-sm-4">

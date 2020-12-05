@@ -240,6 +240,7 @@ const Mutation = new GraphQLObjectType({
             type: BookType,
             args: {
                 code: { type: new GraphQLNonNull(GraphQLString) },
+                category_id: { type: new GraphQLNonNull(GraphQLString) },
                 isbn: { type: new GraphQLNonNull(GraphQLString) },
                 title: { type: new GraphQLNonNull(GraphQLString) },
                 author: { type: new GraphQLNonNull(GraphQLString) },
@@ -262,6 +263,25 @@ const Mutation = new GraphQLObjectType({
                 const book = new Book(payload);
 
                 return book.save();
+            }
+        },
+        updateBook: {
+            type: BookType,
+            args: {
+                id: { type: GraphQLID },
+                category_id: { type: new GraphQLNonNull(GraphQLString) },
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                isbn: { type: new GraphQLNonNull(GraphQLString) },
+                title: { type: new GraphQLNonNull(GraphQLString) },
+                author: { type: new GraphQLNonNull(GraphQLString) },
+                publisher: { type: new GraphQLNonNull(GraphQLString) },
+                city: { type: new GraphQLNonNull(GraphQLString) },
+                year: { type: new GraphQLNonNull(GraphQLInt) },
+                cover: { type: new GraphQLNonNull(GraphQLString) },
+                qty: { type: new GraphQLNonNull(GraphQLInt) },
+            },
+            resolve(parent, args) {
+                return Book.findByIdAndUpdate(args.id, args);
             }
         },
         login: {

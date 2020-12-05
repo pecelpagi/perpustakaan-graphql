@@ -213,3 +213,29 @@ export const createBook = async (payload) => {
 
   return res.data.addBook;
 };
+
+export const updateBook = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation UpdateBook(
+                    $id: ID!, $code: String!, $category_id: String!, $isbn: String!, $title: String!
+                    $author: String!, $publisher: String!, $city: String!
+                    $year: Int!, $cover: String!, $qty: Int!
+                ) {
+                    updateBook(
+                      id: $id, code: $code, category_id: $category_id, isbn: $isbn, title: $title,
+                      author: $author, publisher: $publisher, city: $city,
+                      year: $year, cover: $cover, qty: $qty,
+                    ) {
+                      id
+                      code
+                      title
+                    }
+                }
+                `,
+    });
+
+  return res.data.updateBook;
+};
