@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const modelSchema = new Schema({
     code: String,
+    category_id: String,
     isbn: String,
     title: String,
     author: String,

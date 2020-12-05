@@ -158,18 +158,48 @@ export const deleteCategory = async (id) => {
   return res.data.deleteCategory;
 };
 
+export const getBook = async (id) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: { id },
+      query: gql`
+                  query Book($id: ID!) {
+                      book(id: $id) {
+                        id
+                        category {
+                          id
+                          name
+                        }
+                        isbn
+                        code
+                        title
+                        author
+                        publisher
+                        city
+                        year
+                        cover
+                        qty
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
+};
+
+
 export const createBook = async (payload) => {
   const res = await Util.graphqlClient
     .mutate({
       variables: payload,
       mutation: gql`
                 mutation AddBook(
-                    $code: String!, $isbn: String!, $title: String!
+                    $code: String!, $category_id: String!, $isbn: String!, $title: String!
                     $author: String!, $publisher: String!, $city: String!
                     $year: Int!, $cover: String!, $qty: Int!
                 ) {
                     addBook(
-                      code: $code, isbn: $isbn, title: $title,
+                      code: $code, category_id: $category_id, isbn: $isbn, title: $title,
                       author: $author, publisher: $publisher, city: $city,
                       year: $year, cover: $cover, qty: $qty,
                     ) {

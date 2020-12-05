@@ -45,8 +45,16 @@ const BookType = new GraphQLObjectType({
     name: 'Book',
     fields: () => ({
         id: { type: GraphQLID },
+        category_id: { type: GraphQLString },
+        category: {
+            type: CategoryType,
+            resolve(parent, args) {
+                console
+                return Category.findById(parent.category_id);
+            }
+        },
         code: { type: GraphQLString },
-        isbn: { type: GraphQLInt },
+        isbn: { type: GraphQLString },
         title: { type: GraphQLString },
         author: { type: GraphQLString },
         publisher: { type: GraphQLString },
@@ -176,6 +184,14 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
                 return Category.findById(args.id);
+            }
+        },
+        book: {
+            type: BookType,
+            args: { id: { type: GraphQLID } },
+            resolve: async (parent, args) => {
+                const retval = await Book.findById(args.id);
+                return retval;
             }
         },
     }
