@@ -83,10 +83,18 @@ class Table extends React.Component {
     );
   }
 
+  createStyleColumnHeader = (obj) => {
+    if (ishasProperty(obj, "width")) {
+      return { width: obj.width };
+    }
+
+    return {};
+  }
+
   renderTableHeader = columns => (
     <thead>
       <tr>
-        {columns.map(x => (<th key={x.id}>{x.title}</th>))}
+        {columns.map(x => (<th key={x.id} style={this.createStyleColumnHeader(x)}>{x.title}</th>))}
       </tr>
     </thead>
   )

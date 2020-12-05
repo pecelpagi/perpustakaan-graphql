@@ -239,3 +239,21 @@ export const updateBook = async (payload) => {
 
   return res.data.updateBook;
 };
+
+export const deleteBook = async (id) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: { id },
+      mutation: gql`
+                mutation DeleteBook($id: ID!) {
+                    deleteBook(id: $id) {
+                      id
+                      code
+                      title
+                    }
+                }
+                `,
+    });
+
+  return res.data.deleteBook;
+};

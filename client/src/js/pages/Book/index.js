@@ -8,10 +8,12 @@ const columns = [
   {
     id: "code",
     title: "Nomor Panggil",
+    width: "15%",
   },
   {
     id: "title",
     title: "Judul",
+    width: "30%",
   },
   {
     id: "author",

@@ -233,8 +233,11 @@ class BookDetail extends React.Component {
     this.setState({ footerButtons });
   }
 
-  onDelete = () => {
+  onDelete = async () => {
+    const { id } = this.state;
+    await graphqlApi.deleteBook(id);
 
+    this.gotoBasePath();
   }
 
   onFetchCategory = async (state) => {
