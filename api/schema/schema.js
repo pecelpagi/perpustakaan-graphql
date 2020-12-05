@@ -224,6 +224,13 @@ const RootQuery = new GraphQLObjectType({
                 return getMetaData(args);
             }
         },
+        member: {
+            type: MemberType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                return Member.findById(args.id);
+            }
+        },
         category: {
             type: CategoryType,
             args: { id: { type: GraphQLID } },
@@ -334,6 +341,41 @@ const Mutation = new GraphQLObjectType({
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
                 return Book.findByIdAndRemove(args.id);
+            }
+        },
+        addMember: {
+            type: MemberType,
+            args: {
+                registration_number: { type: new GraphQLNonNull(GraphQLString) },
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                address: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type: new GraphQLNonNull(GraphQLString) },
+                phone: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                let member = new Member(args);
+                return member.save();
+            }
+        },
+        updateMember: {
+            type: MemberType,
+            args: {
+                id: { type: GraphQLID },
+                registration_number: { type: new GraphQLNonNull(GraphQLString) },
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                address: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type: new GraphQLNonNull(GraphQLString) },
+                phone: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return Member.findByIdAndUpdate(args.id, args);
+            }
+        },
+        deleteMember: {
+            type: MemberType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                return Member.findByIdAndRemove(args.id);
             }
         },
         login: {
