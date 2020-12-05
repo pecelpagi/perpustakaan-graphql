@@ -4,6 +4,7 @@ import * as Util from "../utils";
 const CollectionType = {
   CATEGORY: "Category",
   BOOK: "Book",
+  MEMBER: "Member",
 };
 
 export const getUsers = async () => {
@@ -256,4 +257,28 @@ export const deleteBook = async (id) => {
     });
 
   return res.data.deleteBook;
+};
+
+export const getMembers = async (payload) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: Object.assign({}, payload, { collection: CollectionType.MEMBER }),
+      query: gql`
+                  query Members($skip: Int, $limit: Int, $collection: String) {
+                      members(skip: $skip, limit: $limit) {
+                          id
+                          registration_number
+                          name
+                          address
+                          email
+                          phone
+                      }
+                      meta_data(collection: $collection, limit: $limit) {
+                        total_page
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
 };

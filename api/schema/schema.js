@@ -6,6 +6,7 @@ const Constants = require('../constants');
 const User = require('../models/users');
 const Category = require('../models/categories');
 const Book = require('../models/books');
+const Member = require('../models/members');
 
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
@@ -29,6 +30,18 @@ const LoginType = new GraphQLObjectType({
         token: { type: GraphQLString },
         username: { type: GraphQLString },
         fullname: { type: GraphQLString },
+    }),
+});
+
+const MemberType = new GraphQLObjectType({
+    name: 'Member',
+    fields: () => ({
+        id: { type: GraphQLID },
+        registration_number: { type: GraphQLString },
+        name: { type: GraphQLString },
+        address: { type: GraphQLString },
+        email: { type: GraphQLString },
+        phone: { type: GraphQLString },
     }),
 });
 
@@ -88,6 +101,9 @@ const getMetaData = async (args) => {
     } else if(args.collection === 'Book') {
         const totalData = await Book.countDocuments(filter);
         totalPage = Math.ceil(totalData / args.limit);
+    } else if(args.collection === 'Member') {
+        const totalData = await Member.countDocuments(filter);
+        totalPage = Math.ceil(totalData / args.limit);
     }
 
     return {
@@ -102,6 +118,35 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(UserType),
             resolve(parent, args) {
                 return User.find();
+            }
+        },
+        members: {
+            type: new GraphQLList(MemberType),
+            args: { 
+                skip: { type: GraphQLInt },
+                limit: { type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                let filter = {};
+
+                if (args.search) {
+                    filter = {
+                        code: new RegExp(args.search, "i"),
+                    }
+                }
+
+                let findData = Member.find(filter);
+                
+                if (args.skip) {
+                    findData = findData.skip(args.skip);
+                }
+
+                if (args.limit) {
+                    findData = findData.limit(args.limit);
+                }
+
+                return findData;
             }
         },
         categories: {
