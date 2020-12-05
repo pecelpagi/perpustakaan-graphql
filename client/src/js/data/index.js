@@ -282,3 +282,100 @@ export const getMembers = async (payload) => {
 
   return res.data;
 };
+
+export const getMember = async (id) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: { id },
+      query: gql`
+                  query Member($id: ID!) {
+                      member(id: $id) {
+                        id
+                        registration_number
+                        name
+                        address
+                        email
+                        phone
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
+};
+
+
+export const createMember = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation AddMember(
+                    $registration_number: String!, $name: String!, $address: String!,
+                    $email: String!, $phone: String!
+                ) {
+                    addMember(
+                      registration_number: $registration_number, name: $name, address: $address,
+                      email: $email, phone: $phone
+                    ) {
+                      id
+                      registration_number
+                      name
+                      address
+                      email
+                      phone
+                    }
+                }
+                `,
+    });
+
+  return res.data.addMember;
+};
+
+export const updateMember = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation UpdateMember(
+                    $id: ID!, $registration_number: String!, $name: String!, $address: String!,
+                    $email: String!, $phone: String!
+                ) {
+                    updateMember(
+                      id: $id, registration_number: $registration_number, name: $name, address: $address,
+                      email: $email, phone: $phone
+                    ) {
+                      id
+                      registration_number
+                      name
+                      address
+                      email
+                      phone
+                    }
+                }
+                `,
+    });
+
+  return res.data.updateMember;
+};
+
+export const deleteMember = async (id) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: { id },
+      mutation: gql`
+                mutation DeleteMember($id: ID!) {
+                    deleteMember(id: $id) {
+                      id
+                      registration_number
+                      name
+                      address
+                      email
+                      phone
+                    }
+                }
+                `,
+    });
+
+  return res.data.deleteMember;
+};

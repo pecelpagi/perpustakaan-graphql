@@ -93,15 +93,18 @@ class MemberDetail extends React.Component {
   }
 
   setupDetailData = async (id) => {
-    const res = await graphqlApi.getCategory(id);
+    const res = await graphqlApi.getMember(id);
 
-    const { category: data } = res;
+    const { member: data } = res;
     const newState = {
       id: data.id,
       type: "edit",
       form: {
-        code: data.code,
+        registration_number: data.registration_number,
         name: data.name,
+        address: data.address,
+        email: data.email,
+        phone: data.phone,
       },
     };
 
@@ -159,26 +162,66 @@ class MemberDetail extends React.Component {
         <div className="row mb-sm">
           <div className="col-sm-6">
             <InputText
-              label="Kode Kategori"
-              changeEvent={(val, e) => this.changeValueHandler("code", val, e)}
-              value={String(form.code)}
-              name="code"
+              label="No Induk"
+              changeEvent={(val, e) => this.changeValueHandler("registration_number", val, e)}
+              value={String(form.registration_number)}
+              name="registration_number"
               required
             />
-            <FieldFeedbacks for="code">
-              <FieldFeedback when="valueMissing">Kode wajib diisi</FieldFeedback>
+            <FieldFeedbacks for="registration_number">
+              <FieldFeedback when="valueMissing">No Induk wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
           <div className="col-sm-6">
             <InputText
-              label="Nama Kategori"
+              label="Nama"
               changeEvent={(val, e) => this.changeValueHandler("name", val, e)}
               value={String(form.name)}
               name="name"
               required
             />
             <FieldFeedbacks for="name">
-              <FieldFeedback when="valueMissing">Nama kategori wajib diisi</FieldFeedback>
+              <FieldFeedback when="valueMissing">Nama wajib diisi</FieldFeedback>
+            </FieldFeedbacks>
+          </div>
+        </div>
+        <div className="row mb-sm">
+          <div className="col-sm-12">
+            <InputText
+              label="Alamat"
+              changeEvent={(val, e) => this.changeValueHandler("address", val, e)}
+              value={String(form.address)}
+              name="address"
+              required
+            />
+            <FieldFeedbacks for="address">
+              <FieldFeedback when="valueMissing">Alamat wajib diisi</FieldFeedback>
+            </FieldFeedbacks>
+          </div>
+        </div>
+        <div className="row mb-sm">
+          <div className="col-sm-6">
+            <InputText
+              label="Email"
+              changeEvent={(val, e) => this.changeValueHandler("email", val, e)}
+              value={String(form.email)}
+              name="email"
+              required
+            />
+            <FieldFeedbacks for="email">
+              <FieldFeedback when="valueMissing">Email wajib diisi</FieldFeedback>
+            </FieldFeedbacks>
+          </div>
+          <div className="col-sm-6">
+            <InputText
+              label="No Telepon"
+              changeEvent={(val, e) => this.changeValueHandler("phone", val, e)}
+              value={String(form.phone)}
+              name="phone"
+              required
+            />
+            <FieldFeedbacks for="phone">
+              <FieldFeedback when="valueMissing">No Telepon wajib diisi</FieldFeedback>
             </FieldFeedbacks>
           </div>
         </div>
@@ -188,7 +231,7 @@ class MemberDetail extends React.Component {
 
   gotoBasePath = () => {
     const { history } = this.props;
-    history.push("/categories");
+    history.push("/members");
   }
 
   saveDataHandler = async () => {
@@ -201,13 +244,13 @@ class MemberDetail extends React.Component {
 
     if (isFormValid) {
       if (type === "create") {
-        await graphqlApi.createCategory(form);
+        await graphqlApi.createMember(form);
       } else {
         const payload = {
           id,
           ...form,
         };
-        await graphqlApi.updateCategory(payload);
+        await graphqlApi.updateMember(payload);
       }
       this.gotoBasePath();
       return;
@@ -225,7 +268,7 @@ class MemberDetail extends React.Component {
       id,
     } = this.state;
 
-    await graphqlApi.deleteCategory(id);
+    await graphqlApi.deleteMember(id);
     this.gotoBasePath();
   }
 
@@ -240,7 +283,7 @@ class MemberDetail extends React.Component {
           <div className="panel-heading">
             <div className="row mb-reset">
               <div className="col-sm-12">
-                <h3 className="panel-title">{type === "create" ? "Tambah" : "Edit"} Kategori</h3>
+                <h3 className="panel-title">{type === "create" ? "Tambah" : "Edit"} Anggota</h3>
               </div>
             </div>
           </div>
