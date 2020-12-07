@@ -7,12 +7,36 @@ const User = require('../models/users');
 const Category = require('../models/categories');
 const Book = require('../models/books');
 const Member = require('../models/members');
+const Borrowing = require('../models/borrowings');
 
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
     GraphQLID, GraphQLList, GraphQLBoolean, GraphQLInt,
     GraphQLNonNull,
 } = graphql;
+
+const createCode = (length = 8) => {
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i += 1) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+};
+
+const BorrowType = new GraphQLObjectType({
+    name: 'Borrow',
+    fields: () => ({
+        id: { type: GraphQLID },
+        code: { type: GraphQLString },
+        book_id: { type: GraphQLString },
+        member_id: { type: GraphQLString },
+        borrow_date: { type: GraphQLString },
+        return_date: { type: GraphQLString },
+    }),
+});
+
 
 const UserType = new GraphQLObjectType({
     name: 'User',
@@ -252,6 +276,24 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        borrowBook: {
+            type: BorrowType,
+            args: {
+                book_id: { type: new GraphQLNonNull(GraphQLString) },
+                member_id: { type: new GraphQLNonNull(GraphQLString) },
+                borrow_date: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                let borrowBook = new Borrowing({
+                    code: createCode(),
+                    book_id: args.book_id,
+                    member_id: args.member_id,
+                    borrow_date: args.borrow_date,
+                    return_date: '-',
+                });
+                return borrowBook.save();
+            }
+        },
         addCategory: {
             type: CategoryType,
             args: {

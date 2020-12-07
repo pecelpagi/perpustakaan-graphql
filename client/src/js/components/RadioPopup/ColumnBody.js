@@ -41,11 +41,20 @@ class ColumnBody extends React.Component {
   }
 
   createColumnContent = (columns, rowData) => {
-    const retval = columns.map(x => (
-      <div key={x.accessor} className="popup-data__row-content-column" style={{ width: x.width }}>
-        {rowData[x.accessor]}
-      </div>
-    ));
+    const retval = columns.map((x, i) => {
+      let width = String(x.width).replace("%", "");
+      width = parseInt(width, 10);
+
+      if (width > 10 && i === (columns.length - 1)) {
+        width -= 10;
+      }
+
+      return (
+        <div key={x.accessor} className="popup-data__row-content-column" style={{ width: `${width}%` }}>
+          {rowData[x.accessor]}
+        </div>
+      );
+    });
 
     return retval;
   }

@@ -379,3 +379,24 @@ export const deleteMember = async (id) => {
 
   return res.data.deleteMember;
 };
+
+export const borrowBook = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation BorrowBook($book_id: String!, $member_id: String!, $borrow_date: String!) {
+                    borrowBook(book_id: $book_id, member_id: $member_id, borrow_date: $borrow_date) {
+                      id
+                      code
+                      book_id
+                      member_id
+                      borrow_date
+                      return_date
+                    }
+                }
+                `,
+    });
+
+  return res.data.borrowBook;
+};
