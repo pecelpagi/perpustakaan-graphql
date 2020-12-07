@@ -5,6 +5,7 @@ const CollectionType = {
   CATEGORY: "Category",
   BOOK: "Book",
   MEMBER: "Member",
+  BORROWING: "Borrowing",
 };
 
 export const getUsers = async () => {
@@ -378,6 +379,38 @@ export const deleteMember = async (id) => {
     });
 
   return res.data.deleteMember;
+};
+
+export const getBorrowings = async (payload) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: Object.assign({}, payload, { collection: CollectionType.BORROWING }),
+      query: gql`
+                  query Borrowings($skip: Int, $limit: Int, $collection: String) {
+                      borrowings(skip: $skip, limit: $limit) {
+                        id
+                        code
+                        book {
+                          id
+                          code
+                          title
+                        }
+                        member {
+                          id
+                          registration_number
+                          name
+                        }
+                        borrow_date
+                        return_date
+                      }
+                      meta_data(collection: $collection, limit: $limit) {
+                        total_page
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
 };
 
 export const borrowBook = async (payload) => {

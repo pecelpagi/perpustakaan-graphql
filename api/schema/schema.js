@@ -31,7 +31,19 @@ const BorrowType = new GraphQLObjectType({
         id: { type: GraphQLID },
         code: { type: GraphQLString },
         book_id: { type: GraphQLString },
+        book: {
+            type: BookType,
+            resolve(parent, args) {
+                return Book.findById(parent.book_id);
+            }
+        },
         member_id: { type: GraphQLString },
+        member: {
+            type: MemberType,
+            resolve(parent, args) {
+                return Member.findById(parent.member_id);
+            }
+        },
         borrow_date: { type: GraphQLString },
         return_date: { type: GraphQLString },
     }),
@@ -86,7 +98,6 @@ const BookType = new GraphQLObjectType({
         category: {
             type: CategoryType,
             resolve(parent, args) {
-                console
                 return Category.findById(parent.category_id);
             }
         },
@@ -128,6 +139,9 @@ const getMetaData = async (args) => {
     } else if(args.collection === 'Member') {
         const totalData = await Member.countDocuments(filter);
         totalPage = Math.ceil(totalData / args.limit);
+    } else if(args.collection === 'Borrowing') {
+        const totalData = await Borrowing.countDocuments(filter);
+        totalPage = Math.ceil(totalData / args.limit);
     }
 
     return {
@@ -142,6 +156,35 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(UserType),
             resolve(parent, args) {
                 return User.find();
+            }
+        },
+        borrowings: {
+            type: new GraphQLList(BorrowType),
+            args: { 
+                skip: { type: GraphQLInt },
+                limit: { type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                let filter = {};
+
+                if (args.search) {
+                    filter = {
+                        code: new RegExp(args.search, "i"),
+                    }
+                }
+
+                let findData = Borrowing.find(filter);
+                
+                if (args.skip) {
+                    findData = findData.skip(args.skip);
+                }
+
+                if (args.limit) {
+                    findData = findData.limit(args.limit);
+                }
+
+                return findData;
             }
         },
         members: {
