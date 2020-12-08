@@ -50,15 +50,15 @@ class Peminjaman extends React.Component {
         label: "App", link: "#",
       },
       {
-        label: "Koleksi Pustaka", link: "#",
+        label: "Peminjaman", link: "#",
       },
-      "Daftar Koleksi",
+      "Status Peminjaman",
     ]);
   }
 
   onClickRow = (data) => {
     const { history } = this.props;
-    history.push(`/book/edit/${data.id}`);
+    history.push(`/peminjaman/detail/${data.id}`);
   }
 
   callCreateHandler = () => {

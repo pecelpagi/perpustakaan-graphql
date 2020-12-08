@@ -433,3 +433,53 @@ export const borrowBook = async (payload) => {
 
   return res.data.borrowBook;
 };
+
+export const returnBook = async (id) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: { id },
+      mutation: gql`
+                mutation ReturnBook($id: ID!) {
+                    returnBook(id: $id) {
+                      id
+                      code
+                      book_id
+                      member_id
+                      borrow_date
+                      return_date
+                    }
+                }
+                `,
+    });
+
+  return res.data.borrowBook;
+};
+
+export const getBorrowing = async (id) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: { id },
+      query: gql`
+                  query Borrowing($id: ID!) {
+                    borrowing(id: $id) {
+                      id
+                      code
+                      book {
+                        id
+                        code
+                        title
+                      }
+                      member {
+                        id
+                        registration_number
+                        name
+                      }
+                      borrow_date
+                      return_date
+                    }
+                  }
+    `,
+    });
+
+  return res.data;
+};

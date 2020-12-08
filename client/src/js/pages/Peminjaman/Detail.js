@@ -3,6 +3,7 @@ import update from "immutability-helper";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
+import { graphql } from "graphql";
 import FormValidation from "~/components/FormValidation";
 import InputText from "~/components/InputText";
 import BrowseData from "~/components/BrowseData";
@@ -65,7 +66,14 @@ class PeminjamanDetail extends React.Component {
     this.state = {
       id: "",
       isFormSubmitted: false,
-      type: "create",
+      type: "",
+      detail: {
+        code: "",
+        book_title: "",
+        member_name: "",
+        borrow_date: "",
+        return_date: "",
+      },
       form: {
         book: {
           id: "",
@@ -88,10 +96,12 @@ class PeminjamanDetail extends React.Component {
   setupData = async () => {
     const { match: { params } } = this.props;
 
-    if (params.type === "edit") {
+    if (params.type === "detail") {
       await this.setupDetailData(params.id);
     } else {
-      this.setupBreadcrumbs("Peminjaman Baru");
+      this.setState({ type: "create" }, () => {
+        this.setupBreadcrumbs("Peminjaman Baru");
+      });
     }
   }
 
@@ -111,7 +121,23 @@ class PeminjamanDetail extends React.Component {
   }
 
   setupDetailData = async (id) => {
-    // logic here
+    const res = await graphqlApi.getBorrowing(id);
+
+    const { borrowing: data } = res;
+    const newState = {
+      id: data.id,
+      type: "detail",
+      detail: {
+        code: data.code,
+        book_title: `${data.book.code} (${data.book.title})`,
+        member_name: `${data.member.registration_number} (${data.member.name})`,
+        borrow_date: moment(data.borrow_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
+        return_date: data.return_date === "-" ? "Belum Dikembalikan" : moment(data.return_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
+      },
+    };
+
+    this.setupBreadcrumbs("Data Peminjaman");
+    this.setState(newState);
   }
 
   changeValueHandler = async (type, val, e) => {
@@ -221,6 +247,51 @@ class PeminjamanDetail extends React.Component {
     };
   }
 
+  detailComponent = () => {
+    const { detail } = this.state;
+
+    return (
+      <table className="table">
+        <tbody>
+          <tr>
+            <td style={{ width: "20%" }}>Kode Transaksi</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{detail.code}</td>
+          </tr>
+          <tr>
+            <td>Pustaka Dipinjam</td>
+            <td>:</td>
+            <td>{detail.book_title}</td>
+          </tr>
+          <tr>
+            <td>Identitas Peminjam</td>
+            <td>:</td>
+            <td>{detail.member_name}</td>
+          </tr>
+          <tr>
+            <td>Tanggal Pinjam</td>
+            <td>:</td>
+            <td>{detail.borrow_date}</td>
+          </tr>
+          <tr>
+            <td>Tanggal Kembali</td>
+            <td>:</td>
+            <td>{detail.return_date}</td>
+          </tr>
+          <tr>
+            <td>
+              <button type="button" className="btn" onClick={this.gotoBasePath}>Kembali ke Status Peminjaman</button>
+            </td>
+            <td></td>
+            <td>
+              {detail.return_date === "-" && <button type="button" className="btn" onClick={this.onReturnBook}>Selesai Pinjam</button>}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+
   formComponent = () => {
     const {
       form,
@@ -291,9 +362,17 @@ class PeminjamanDetail extends React.Component {
     history.push("/peminjaman-list");
   }
 
+  onReturnBook = async () => {
+    const { id } = this.state;
+
+    await graphqlApi.returnBook(id);
+
+    this.gotoBasePath();
+  }
+
   saveDataHandler = async () => {
     const {
-      form, type, id,
+      form, type,
     } = this.state;
     this.updateButtonsState(true, true);
 
@@ -321,22 +400,12 @@ class PeminjamanDetail extends React.Component {
     });
   }
 
-  render = () => {
-    const {
-      footerButtons, type,
-    } = this.state;
+  renderPanelBody = () => {
+    const { type, footerButtons } = this.state;
 
-    return (
-      <div style={{ width: "80%", position: "relative", margin: "0px auto" }}>
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <div className="row mb-reset">
-              <div className="col-sm-12">
-                <h3 className="panel-title">Peminjaman Baru</h3>
-              </div>
-            </div>
-          </div>
-          <div className="panel-body">
+    if (type === "create") {
+      return (
+        <div className="panel-body">
             {this.formComponent()}
             <div className="row">
               <div className="col-sm-8" />
@@ -344,7 +413,42 @@ class PeminjamanDetail extends React.Component {
                 {footerButtons.map((x, i) => (<button key={x.id} style={(i === footerButtons.length - 1) ? {} : { marginRight: "10px" }} type="button" className={`btn ${x.type ? `btn-${x.type}` : ""}`} onClick={!x.isDisabled ? x.action : () => { }} disabled={x.isDisabled}>{x.content}</button>))}
               </div>
             </div>
+        </div>
+      );
+    }
+
+    if (type === "detail") {
+      return (
+        <div className="panel-body">
+            {this.detailComponent()}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  render = () => {
+    const { type } = this.state;
+    let title = "";
+
+    if (type === "create") {
+      title = "Peminjaman Baru";
+    } else if (type === "detail") {
+      title = "Detail Peminjaman";
+    }
+
+    return (
+      <div style={{ width: "80%", position: "relative", margin: "0px auto" }}>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <div className="row mb-reset">
+              <div className="col-sm-12">
+                <h3 className="panel-title">{title}</h3>
+              </div>
+            </div>
           </div>
+          {this.renderPanelBody()}
         </div>
       </div>
     );

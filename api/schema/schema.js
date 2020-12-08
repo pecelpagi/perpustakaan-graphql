@@ -1,6 +1,7 @@
 const graphql = require('graphql');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const Constants = require('../constants');
 const User = require('../models/users');
@@ -313,6 +314,14 @@ const RootQuery = new GraphQLObjectType({
                 return retval;
             }
         },
+        borrowing: {
+            type: BorrowType,
+            args: { id: { type: GraphQLID } },
+            resolve: async (parent, args) => {
+                const retval = await Borrowing.findById(args.id);
+                return retval;
+            }
+        },
     }
 });
 
@@ -335,6 +344,16 @@ const Mutation = new GraphQLObjectType({
                     return_date: '-',
                 });
                 return borrowBook.save();
+            }
+        },
+        returnBook: {
+            type: BorrowType,
+            args: { id: { type: GraphQLID } },
+            resolve(parent, args) {
+                let payload = {
+                    return_date: moment().format('YYYY-MM-DD'),
+                };
+                return Borrowing.findByIdAndUpdate(args.id, payload);
             }
         },
         addCategory: {
