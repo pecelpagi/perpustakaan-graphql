@@ -39,3 +39,11 @@ export const createPathPreview = (rawPath) => {
 
   return rawPath;
 };
+
+export const catchError = (e) => {
+  let message = "Unknown error";
+  if (typeof e === "string") message = e;
+  if (Object.prototype.hasOwnProperty.call(e, "message")) ({ message } = e);
+  if (Object.prototype.hasOwnProperty.call(e, "error")) ({ error: message } = e);
+  return message;
+};

@@ -5,6 +5,7 @@ import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
 import FormValidation from "~/components/FormValidation";
 import InputText from "~/components/InputText";
 import * as graphqlApi from "../../data";
+import { catchError } from "../../utils";
 
 class MemberDetail extends React.Component {
   static propTypes = {
@@ -62,6 +63,11 @@ class MemberDetail extends React.Component {
 
   componentWillMount = () => {
     this.setupData();
+  }
+
+  doShowingNotification = (message) => {
+    const { addNotification } = this.props;
+    addNotification(message);
   }
 
   setupData = async () => {
@@ -155,7 +161,7 @@ class MemberDetail extends React.Component {
 
   formComponent = () => {
     const {
-      form,
+      form, type,
     } = this.state;
     return (
       <FormValidation ref={(c) => { this.form = c; }}>
@@ -166,6 +172,7 @@ class MemberDetail extends React.Component {
               changeEvent={(val, e) => this.changeValueHandler("registration_number", val, e)}
               value={String(form.registration_number)}
               name="registration_number"
+              disabled={type === "edit"}
               required
             />
             <FieldFeedbacks for="registration_number">
@@ -235,32 +242,44 @@ class MemberDetail extends React.Component {
   }
 
   saveDataHandler = async () => {
-    const {
-      form, type, id,
-    } = this.state;
-    this.updateButtonsState(true, true);
+    try {
+      const {
+        form, type, id,
+      } = this.state;
 
-    const isFormValid = await this.form.validateForm();
+      this.setState({
+        isFormSubmitted: true,
+      });
 
-    if (isFormValid) {
-      if (type === "create") {
-        await graphqlApi.createMember(form);
-      } else {
-        const payload = {
-          id,
-          ...form,
-        };
-        await graphqlApi.updateMember(payload);
+      this.updateButtonsState(true, true);
+
+      const isFormValid = await this.form.validateForm();
+
+      if (isFormValid) {
+        if (type === "create") {
+          await graphqlApi.createMember(form);
+        } else {
+          const payload = {
+            id,
+            ...form,
+          };
+          await graphqlApi.updateMember(payload);
+        }
+        this.gotoBasePath();
+        return;
       }
-      this.gotoBasePath();
+
+      this.updateButtonsState(false, true);
+
       return;
+    } catch (err) {
+      this.updateButtonsState(false, false);
+      this.doShowingNotification({
+        title: "Terjadi Kesalahan",
+        message: catchError(err),
+        level: "error",
+      });
     }
-
-    this.updateButtonsState(false, true);
-
-    this.setState({
-      isFormSubmitted: true,
-    });
   }
 
   onDelete = async () => {

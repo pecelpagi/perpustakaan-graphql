@@ -1,5 +1,6 @@
 /* eslint prop-types: 0 */
 import React from "react";
+import NotificationSystem from "react-notification-system";
 
 class Layout extends React.Component {
   constructor(props) {
@@ -70,6 +71,10 @@ class Layout extends React.Component {
     );
   }
 
+  addNotification = (val) => {
+    this.notificationSystem.addNotification(val);
+  };
+
   render() {
     const { children } = this.props;
 
@@ -78,6 +83,7 @@ class Layout extends React.Component {
       child => React.cloneElement(child, {
         assignButtons: this.assignButtonsHandler,
         assignBreadcrumbs: this.assignBreadcrumbsHandler,
+        addNotification: this.addNotification,
       }),
     );
 
@@ -85,6 +91,7 @@ class Layout extends React.Component {
       <div className="page-content">
         {this.renderButtonsAndBreadcrumbs()}
         {childrenWithProps}
+        <NotificationSystem ref={(c) => { this.notificationSystem = c; }} />
       </div>
     );
   }
