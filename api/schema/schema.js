@@ -450,9 +450,21 @@ const Mutation = new GraphQLObjectType({
                 email: { type: new GraphQLNonNull(GraphQLString) },
                 phone: { type: new GraphQLNonNull(GraphQLString) },
             },
-            resolve(parent, args) {
+            resolve: async (parent, args) => {
+                let retval = null;
+
+                const filter = {
+                    registration_number: args.registration_number,
+                };
+                const findData = await Member.findOne(filter);
+                if (findData) {
+                    throw new Error("Nomor induk sudah digunakan");
+                }
+
                 let member = new Member(args);
-                return member.save();
+                retval = member.save();
+
+                return retval;
             }
         },
         updateMember: {
