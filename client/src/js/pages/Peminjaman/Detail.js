@@ -132,7 +132,7 @@ class PeminjamanDetail extends React.Component {
         book_title: `${data.book.code} (${data.book.title})`,
         member_name: `${data.member.registration_number} (${data.member.name})`,
         borrow_date: moment(data.borrow_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
-        return_date: data.return_date === "-" ? "Belum Dikembalikan" : moment(data.return_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
+        return_date: data.return_date === "-" ? "-" : moment(data.return_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
       },
     };
 
@@ -276,7 +276,7 @@ class PeminjamanDetail extends React.Component {
           <tr>
             <td>Tanggal Kembali</td>
             <td>:</td>
-            <td>{detail.return_date}</td>
+            <td>{detail.return_date === "-" ? "Belum Dikembalikan" : detail.return_date}</td>
           </tr>
           <tr>
             <td>

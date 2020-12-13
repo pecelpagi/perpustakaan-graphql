@@ -346,10 +346,7 @@ const Mutation = new GraphQLObjectType({
             type: BorrowType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                let payload = {
-                    return_date: moment().format('YYYY-MM-DD'),
-                };
-                return Borrowing.findByIdAndUpdate(args.id, payload);
+                return transactions.returnBook(args);
             }
         },
         addCategory: {
