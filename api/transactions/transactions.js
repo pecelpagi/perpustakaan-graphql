@@ -17,6 +17,12 @@ const transactions = {
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
+            const stillBorrowing = await Borrowing.findOne({ member_id: args.member_id, return_date: '-' });
+
+            if (stillBorrowing) {
+                throw new Error("Buku belum dikembalikan");
+            }
+
             const book = await Book.findById(args.book_id).session(session);
 
             if (book.qty < 1) {
@@ -42,7 +48,6 @@ const transactions = {
             retval = borrowBook;
         } catch (error) {
             await session.abortTransaction();
-            console.error(error);
             throw error;
         } finally {
             // ending the session

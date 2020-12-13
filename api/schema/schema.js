@@ -18,6 +18,11 @@ const {
     GraphQLNonNull,
 } = graphql;
 
+const verifyToken = (token) => {
+    const data = jwt.verify(token, Constants.SECRET_KEY);
+    return data;
+}
+
 const BorrowType = new GraphQLObjectType({
     name: 'Borrow',
     fields: () => ({
@@ -301,8 +306,13 @@ const RootQuery = new GraphQLObjectType({
         },
         book: {
             type: BookType,
-            args: { id: { type: GraphQLID } },
+            args: {
+                // token: { type: GraphQLNonNull(GraphQLString) },
+                id: { type: GraphQLID }
+            },
             resolve: async (parent, args) => {
+                // verifyToken(args.token);
+
                 const retval = await Book.findById(args.id);
                 return retval;
             }
