@@ -10,21 +10,13 @@ const Book = require('../models/books');
 const Member = require('../models/members');
 const Borrowing = require('../models/borrowings');
 
+const transactions = require('../transactions/transactions');
+
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
     GraphQLID, GraphQLList, GraphQLBoolean, GraphQLInt,
     GraphQLNonNull,
 } = graphql;
-
-const createCode = (length = 8) => {
-    let result = "";
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i += 1) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-};
 
 const BorrowType = new GraphQLObjectType({
     name: 'Borrow',
@@ -111,6 +103,7 @@ const BookType = new GraphQLObjectType({
         year: { type: GraphQLInt },
         cover: { type: GraphQLString },
         qty: { type: GraphQLInt },
+        on_loan_qty: { type: GraphQLInt },
     }),
 });
 
@@ -336,14 +329,7 @@ const Mutation = new GraphQLObjectType({
                 borrow_date: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
-                let borrowBook = new Borrowing({
-                    code: createCode(),
-                    book_id: args.book_id,
-                    member_id: args.member_id,
-                    borrow_date: args.borrow_date,
-                    return_date: '-',
-                });
-                return borrowBook.save();
+                return transactions.borrowBook(args);
             }
         },
         returnBook: {
@@ -415,6 +401,7 @@ const Mutation = new GraphQLObjectType({
 
                 const payload = Object.assign({}, args, {
                     code: newCode,
+                    on_loan_qty: 0,
                 });
                 const book = new Book(payload);
 

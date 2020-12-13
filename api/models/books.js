@@ -12,7 +12,7 @@ const modelSchema = new Schema({
     year: Number,
     cover: String,
     qty: Number,
-    
+    on_loan_qty: Number,
 });
 
 module.exports = mongoose.model('Book', modelSchema);
