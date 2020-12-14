@@ -37,6 +37,7 @@ class Table extends React.Component {
       limit: "5",
       page: 0,
       totalPage: 0,
+      isFetching: false,
     };
   }
 
@@ -44,10 +45,18 @@ class Table extends React.Component {
     this.forceRefetch();
   }
 
+  setFetching = (isFetching) => {
+    this.setState({ isFetching });
+  }
+
   fetchData = async (state) => {
     const { onFetch } = this.props;
 
+    this.setFetching(true);
+
     const { data, totalPage = 0 } = await onFetch(state);
+
+    this.setFetching(false);
 
     this.setState({ data, totalPage: parseInt(totalPage, 10) });
   };
@@ -101,9 +110,15 @@ class Table extends React.Component {
 
   renderTableBody = (columns, data) => {
     const { rowClick } = this.props;
+    const emptyData = (
+      <tr>
+        <td colSpan={columns.length} className="text-center">Tidak ada data</td>
+      </tr>
+    );
 
     return (
       <tbody>
+        {data.length === 0 && (emptyData)}
         {data.map((x, i) => (
           <tr key={i} onClick={() => { rowClick(x); }}>
             {columns.map(col => (<td key={`${i}${col.id}`}>{ishasProperty(col, "customComponent") ? col.customComponent(x[col.id]) : x[col.id]}</td>))}
@@ -114,16 +129,29 @@ class Table extends React.Component {
   }
 
   renderTable = () => {
-    const { data } = this.state;
+    const { data, isFetching } = this.state;
     const { columns } = this.props;
 
     return (
-      <div>
+      <div className="position-relative">
         <table className="table table-hover mb-reset">
           {this.renderTableHeader(columns)}
           {this.renderTableBody(columns, data)}
         </table>
         {this.renderPagination()}
+        { isFetching && (
+          <div style={{
+            position: "absolute",
+            top: "37px",
+            height: "83%",
+            background: "rgba(255, 255, 255, 0.45)",
+            width: "100%",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>Loading ...</div>
+        )}
       </div>
     );
   }
