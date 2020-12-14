@@ -270,8 +270,6 @@ class MemberDetail extends React.Component {
       }
 
       this.updateButtonsState(false, true);
-
-      return;
     } catch (err) {
       this.updateButtonsState(false, false);
       this.doShowingNotification({

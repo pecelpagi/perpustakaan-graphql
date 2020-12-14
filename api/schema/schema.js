@@ -355,7 +355,15 @@ const Mutation = new GraphQLObjectType({
                 code: { type: new GraphQLNonNull(GraphQLString) },
                 name: { type: new GraphQLNonNull(GraphQLString) },
             },
-            resolve(parent, args) {
+            resolve: async (parent, args) => {
+                const filter = {
+                    code: args.code,
+                };
+                const findData = await Category.findOne(filter);
+                if (findData) {
+                    throw new Error("Kode Kategori sudah digunakan");
+                }
+
                 let category = new Category({
                     code: args.code,
                     name: args.name,

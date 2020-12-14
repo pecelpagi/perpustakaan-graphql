@@ -5,6 +5,7 @@ import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
 import FormValidation from "~/components/FormValidation";
 import InputText from "~/components/InputText";
 import * as graphqlApi from "../../data";
+import { catchError } from "../../utils";
 
 class CategoryDetail extends React.Component {
   static propTypes = {
@@ -59,6 +60,11 @@ class CategoryDetail extends React.Component {
 
   componentWillMount = () => {
     this.setupData();
+  }
+
+  doShowingNotification = (message) => {
+    const { addNotification } = this.props;
+    addNotification(message);
   }
 
   setupData = async () => {
@@ -189,32 +195,42 @@ class CategoryDetail extends React.Component {
   }
 
   saveDataHandler = async () => {
-    const {
-      form, type, id,
-    } = this.state;
-    this.updateButtonsState(true, true);
+    try {
+      const {
+        form, type, id,
+      } = this.state;
 
-    const isFormValid = await this.form.validateForm();
+      this.setState({
+        isFormSubmitted: true,
+      });
 
-    if (isFormValid) {
-      if (type === "create") {
-        await graphqlApi.createCategory(form);
-      } else {
-        const payload = {
-          id,
-          ...form,
-        };
-        await graphqlApi.updateCategory(payload);
+      this.updateButtonsState(true, true);
+
+      const isFormValid = await this.form.validateForm();
+
+      if (isFormValid) {
+        if (type === "create") {
+          await graphqlApi.createCategory(form);
+        } else {
+          const payload = {
+            id,
+            ...form,
+          };
+          await graphqlApi.updateCategory(payload);
+        }
+        this.gotoBasePath();
+        return;
       }
-      this.gotoBasePath();
-      return;
+
+      this.updateButtonsState(false, true);
+    } catch (err) {
+      this.updateButtonsState(false, false);
+      this.doShowingNotification({
+        title: "Terjadi Kesalahan",
+        message: catchError(err),
+        level: "error",
+      });
     }
-
-    this.updateButtonsState(false, true);
-
-    this.setState({
-      isFormSubmitted: true,
-    });
   }
 
   onDelete = async () => {
