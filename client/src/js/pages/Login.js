@@ -84,7 +84,7 @@ class Login extends React.Component {
 
       if (res.token) {
         setToken(res.token);
-        location.href = "/dashboard";
+        location.href = "/books";
       }
     }
 

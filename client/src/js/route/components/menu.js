@@ -26,12 +26,6 @@ const menuData = () => {
 
   return [
     {
-      id: "1",
-      title: "Dashboard",
-      icon: "fa fa-dashboard",
-      link: "/dashboard",
-    },
-    {
       id: "2",
       title: "Koleksi Pustaka",
       icon: "fa fa-book",

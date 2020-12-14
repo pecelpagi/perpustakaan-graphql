@@ -46,7 +46,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
     ) : (
         <Redirect
           to={{
-            pathname: "/dashboard",
+            pathname: "/books",
           }}
         />
     ))
