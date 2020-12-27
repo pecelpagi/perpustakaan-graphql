@@ -181,6 +181,7 @@ export const getBook = async (id) => {
                         year
                         cover
                         qty
+                        on_loan_qty
                       }
                   }
     `,

@@ -58,7 +58,7 @@ class Book extends React.Component {
 
   onClickRow = (data) => {
     const { history } = this.props;
-    history.push(`/book/edit/${data.id}`);
+    history.push(`/book/detail/${data.id}`);
   }
 
   callCreateHandler = () => {

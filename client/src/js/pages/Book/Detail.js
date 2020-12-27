@@ -8,6 +8,7 @@ import FormValidation from "~/components/FormValidation";
 import BrowseData from "~/components/BrowseData";
 import * as graphqlApi from "../../data";
 import createCode from "./helper";
+import { createPathPreview } from "../../utils";
 
 const categoryColumns = [
   {
@@ -48,7 +49,7 @@ class BookDetail extends React.Component {
     this.state = {
       id: "",
       isFormSubmitted: false,
-      type: "create",
+      type: "",
       footerButtons: this.initialButtonActions,
       form: {
         isbn: "",
@@ -64,6 +65,7 @@ class BookDetail extends React.Component {
         year: "",
         cover: "",
         qty: "",
+        onLoanQty: "",
       },
     };
   }
@@ -75,10 +77,12 @@ class BookDetail extends React.Component {
   setupData = async () => {
     const { match: { params } } = this.props;
 
-    if (params.type === "edit") {
-      await this.setupDetailData(params.id);
+    if (params.type === "edit" || params.type === "detail") {
+      await this.setupDetailData(params.id, params.type);
     } else {
-      this.setupBreadcrumbs("Tambah Data");
+      this.setState({ type: "create" }, () => {
+        this.setupBreadcrumbs("Tambah Data");
+      });
     }
   }
 
@@ -100,13 +104,13 @@ class BookDetail extends React.Component {
     ]);
   }
 
-  setupDetailData = async (id) => {
+  setupDetailData = async (id, type) => {
     const res = await graphqlApi.getBook(id);
 
     const { book: data } = res;
     const newState = {
       id: data.id,
-      type: "edit",
+      type,
       form: {
         code: data.code,
         isbn: data.isbn,
@@ -121,6 +125,7 @@ class BookDetail extends React.Component {
         year: data.year,
         cover: data.cover,
         qty: data.qty,
+        onLoanQty: data.on_loan_qty,
       },
     };
 
@@ -131,6 +136,11 @@ class BookDetail extends React.Component {
   gotoBasePath = () => {
     const { history } = this.props;
     history.push("/books");
+  }
+
+  editBook = () => {
+    const { id } = this.state;
+    location.href = `/book/edit/${id}`;
   }
 
   saveDataHandler = async () => {
@@ -252,6 +262,81 @@ class BookDetail extends React.Component {
       data,
       payload: { total_page: res.meta_data.total_page },
     };
+  }
+
+  detailComponent = () => {
+    const { form } = this.state;
+    console.log("DEBUG-FORM: ", form);
+    return (
+      <table className="table">
+        <tbody>
+          <tr>
+            <td style={{ width: "20%" }}>Nomor Panggil</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.code}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>ISBN</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.isbn}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Kategori</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.category.name}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Judul Pustaka</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.title}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Nama Pengarang</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.author}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Penerbit</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.publisher}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Kota Terbit</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.city}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Tahun Terbit</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.year}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Gambar Sampul</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}><img style={{ width: "100px" }} src={createPathPreview(form.cover)} /></td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Jumlah Koleksi Pustaka</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.qty} Eksemplar</td>
+          </tr>
+          <tr>
+            <td style={{ width: "20%" }}>Jumlah Koleksi Dipinjam</td>
+            <td style={{ width: "2%" }}>:</td>
+            <td style={{ width: "78%" }}>{form.onLoanQty} Eksemplar</td>
+          </tr>
+          <tr>
+            <td>
+              <button type="button" className="btn" onClick={this.gotoBasePath}>Kembali ke Daftar Koleksi</button>
+            </td>
+            <td></td>
+            <td>
+              <button type="button" className="btn" onClick={this.editBook}>Edit Buku</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
   }
 
   formComponent = () => {
@@ -385,20 +470,12 @@ class BookDetail extends React.Component {
     );
   }
 
-  render() {
+  renderPanelBody = () => {
     const { type, footerButtons, form } = this.state;
 
-    return (
-      <div style={{ width: "100%", position: "relative", margin: "0px auto" }}>
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <div className="row mb-reset">
-              <div className="col-sm-12">
-                <h3 className="panel-title">{type === "create" ? "Tambah" : "Edit"} Buku</h3>
-              </div>
-            </div>
-          </div>
-          <div className="panel-body">
+    if (type === "create" || type === "edit") {
+      return (
+        <div className="panel-body">
             <div className="row mb-sm">
               <div className="col-sm-9">
                 {this.formComponent()}
@@ -419,6 +496,43 @@ class BookDetail extends React.Component {
               </div>
             </div>
           </div>
+      );
+    }
+
+    if (type === "detail") {
+      return (
+        <div className="panel-body">
+            {this.detailComponent()}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  render() {
+    const { type } = this.state;
+    let title = "";
+
+    if (type === "create") {
+      title = "Tambah Buku";
+    } else if (type === "edit") {
+      title = "Edit Buku";
+    } else if (type === "detail") {
+      title = "Detail Buku";
+    }
+
+    return (
+      <div style={{ width: "100%", position: "relative", margin: "0px auto" }}>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <div className="row mb-reset">
+              <div className="col-sm-12">
+                <h3 className="panel-title">{title}</h3>
+              </div>
+            </div>
+          </div>
+          {this.renderPanelBody()}
         </div>
       </div>
     );
