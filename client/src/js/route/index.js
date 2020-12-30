@@ -53,6 +53,14 @@ const AuthRoute = ({ component: Component, ...rest }) => (
     }
   />
 );
+const PublicRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props => (<Component {...props} {...rest} isAuthenticated={isAuthenticated} />)}
+    />
+  );
+};
 class App extends React.Component {
   render = () => (
     <Router>
@@ -65,11 +73,11 @@ class App extends React.Component {
                   <Route exact path="/" component={RedirectToDashboard} />
                   <AuthRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
                   <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
-                  <PrivateRoute exact path="/books/:id_category" component={asyncComponent(() => import("../pages/Book"))} />
-                  <PrivateRoute exact path="/books" component={asyncComponent(() => import("../pages/Book"))} />
-                  <PrivateRoute exact path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />
+                  <PublicRoute exact path="/books/:id_category" component={asyncComponent(() => import("../pages/Book"))} />
+                  <PublicRoute exact path="/books" component={asyncComponent(() => import("../pages/Book"))} />
+                  <PublicRoute exact path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />
                   <PrivateRoute exact path="/book/:type" component={asyncComponent(() => import("../pages/Book/Detail"))} />
-                  <PrivateRoute path="/categories" component={asyncComponent(() => import("../pages/Category"))} />
+                  <PublicRoute path="/categories" component={asyncComponent(() => import("../pages/Category"))} />
                   <PrivateRoute exact path="/category/:type/:id" component={asyncComponent(() => import("../pages/Category/Detail"))} />
                   <PrivateRoute exact path="/category/:type" component={asyncComponent(() => import("../pages/Category/Detail"))} />
                   <PrivateRoute path="/members" component={asyncComponent(() => import("../pages/Member"))} />

@@ -265,8 +265,9 @@ class BookDetail extends React.Component {
   }
 
   detailComponent = () => {
+    const { isAuthenticated } = this.props;
     const { form } = this.state;
-    console.log("DEBUG-FORM: ", form);
+
     return (
       <table className="table">
         <tbody>
@@ -331,7 +332,7 @@ class BookDetail extends React.Component {
             </td>
             <td></td>
             <td>
-              <button type="button" className="btn" onClick={this.editBook}>Edit Buku</button>
+              {isAuthenticated ? <button type="button" className="btn" onClick={this.editBook}>Edit Buku</button> : null}
             </td>
           </tr>
         </tbody>

@@ -39,11 +39,15 @@ class Book extends React.Component {
   }
 
   componentDidMount = () => {
-    const { assignButtons, assignBreadcrumbs } = this.props;
+    const { assignButtons, assignBreadcrumbs, isAuthenticated } = this.props;
 
-    assignButtons([{
-      id: "1", title: "Tambah Data", icon: "fa fa-plus-square", clickEvent: () => this.callCreateHandler(),
-    }]);
+    if (isAuthenticated) {
+      assignButtons([{
+        id: "1", title: "Tambah Data", icon: "fa fa-plus-square", clickEvent: () => this.callCreateHandler(),
+      }]);
+    } else {
+      assignButtons([]);
+    }
 
     assignBreadcrumbs([
       {
