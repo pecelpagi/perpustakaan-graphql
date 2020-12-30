@@ -67,6 +67,14 @@ class Book extends React.Component {
   }
 
   onFetchData = async (state) => {
+    const { match: { params } } = this.props;
+
+    if (params.id_category) {
+      Object.assign(state, {
+        category_id: params.id_category
+      });
+    }
+
     const res = await graphqlApi.getBooks(state);
     const { books: data, meta_data: metaData } = res;
     const newData = data.map(x => (Object.assign({}, x, {

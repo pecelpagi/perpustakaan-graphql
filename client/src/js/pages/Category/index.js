@@ -3,7 +3,7 @@ import React from "react";
 import * as graphqlApi from "../../data";
 import Table from "../../components/Table";
 
-const columns = [
+const columns = fn => [
   {
     id: "code",
     title: "Kode",
@@ -11,6 +11,18 @@ const columns = [
   {
     id: "name",
     title: "Nama Kategori",
+  },
+  {
+    id: "option",
+    title: "",
+    customComponent: val => (
+      <div>
+        <button type="button" className="btn btn-sm" onClick={() => { fn("view", val); }}><i className="fa fa-search" />{" "}Cari Koleksi</button>
+        &nbsp;&nbsp;
+        <button type="button" className="btn btn-sm" onClick={() => { fn("edit", val); }}><i className="fa fa-edit" />{" "}Edit Data</button>
+      </div>
+    ),
+    width: "20%",
   },
 ];
 class Category extends React.Component {
@@ -40,9 +52,14 @@ class Category extends React.Component {
     ]);
   }
 
-  onClickRow = (data) => {
+  onClickRow = (type, id) => {
     const { history } = this.props;
-    history.push(`/category/edit/${data.id}`);
+
+    if (type === "edit") {
+      history.push(`/category/edit/${id}`);
+    } else {
+      history.push(`/books/${id}`);
+    }
   }
 
   callCreateHandler = () => {
@@ -53,16 +70,17 @@ class Category extends React.Component {
   onFetchData = async (state) => {
     const res = await graphqlApi.getCategories(state);
     const { categories, meta_data: metaData } = res;
+    const newData = categories.map(x => (Object.assign({}, x, { option: x.id })));
 
-    return { data: categories, totalPage: metaData.total_page };
+    return { data: newData, totalPage: metaData.total_page };
   }
 
   render() {
     return (
       <div>
         <Table
-          rowClick={this.onClickRow}
-          columns={columns}
+          rowClick={() => {}}
+          columns={columns(this.onClickRow)}
           onFetch={this.onFetchData}
           withWrapperRender={({ makeTable, InputSearch, PageSize }) => (
             <div className="panel panel-default">

@@ -256,6 +256,7 @@ const RootQuery = new GraphQLObjectType({
                 skip: { type: GraphQLInt },
                 limit: { type: GraphQLInt },
                 search: { type: GraphQLString },
+                category_id: { type: GraphQLString },
             },
             resolve(parent, args) {
                 let filter = {};
@@ -264,6 +265,12 @@ const RootQuery = new GraphQLObjectType({
                     filter = {
                         code: new RegExp(args.search, "i"),
                     }
+                }
+
+                if (args.category_id) {
+                    Object.assign(filter, {
+                        category_id: args.category_id
+                    });
                 }
 
                 let findData = Book.find(filter);
