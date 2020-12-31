@@ -37,6 +37,7 @@ class Table extends React.Component {
       limit: "5",
       page: 0,
       totalPage: 0,
+      filterText: "",
       isFetching: false,
     };
   }
@@ -62,18 +63,34 @@ class Table extends React.Component {
   };
 
   forceRefetch = () => {
-    const { page, limit } = this.state;
-    this.fetchData({ skip: page * parseInt(limit, 10), limit: parseInt(limit, 10) });
+    const { page, limit, filterText } = this.state;
+    this.fetchData({ skip: page * parseInt(limit, 10), limit: parseInt(limit, 10), search: filterText });
   };
 
-  renderFilterText = () => (
+  onSearch = (val) => {
+    this.setState({ filterText: val });
+
+    clearTimeout(this.filterIdle);
+    this.filterIdle = setTimeout(() => {
+      // TODO: be aware remove other filter
+      this.setState({ filterText: val }, () => {
+        this.forceRefetch();
+      });
+    }, 500);
+  }
+
+  renderFilterText = () => {
+    const { filterText } = this.state;
+
+    return (
       <InputText
         placeholder="Pencarian ..."
-        value=""
-        changeEvent={() => { }}
+        value={filterText}
+        changeEvent={this.onSearch}
         required
       />
-  )
+    );
+  }
 
   onChangeLimitData = (val) => {
     this.setState({ limit: val, page: 0 }, () => {

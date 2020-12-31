@@ -15,4 +15,16 @@ const modelSchema = new Schema({
     on_loan_qty: Number,
 });
 
+modelSchema.index({
+    code: 'text',
+    title: 'text',
+    author: 'text',
+}, {
+    weights: {
+        title: 5,
+        author: 3,
+        code: 1,
+    },
+});
+
 module.exports = mongoose.model('Book', modelSchema);

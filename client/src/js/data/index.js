@@ -30,8 +30,8 @@ export const getBooks = async (payload) => {
     .query({
       variables: Object.assign({}, payload, { collection: CollectionType.BOOK }),
       query: gql`
-                  query Books($skip: Int, $limit: Int, $category_id: String, $collection: String) {
-                      books(skip: $skip, limit: $limit, category_id: $category_id) {
+                  query Books($skip: Int, $limit: Int, $category_id: String, $collection: String, $search: String) {
+                      books(skip: $skip, limit: $limit, category_id: $category_id, search: $search) {
                           id
                           code
                           title

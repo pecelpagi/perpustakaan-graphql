@@ -263,7 +263,10 @@ const RootQuery = new GraphQLObjectType({
 
                 if (args.search) {
                     filter = {
-                        code: new RegExp(args.search, "i"),
+                        $text: {
+                            $search: String(args.search),
+                            $caseSensitive: false,
+                        },
                     }
                 }
 
