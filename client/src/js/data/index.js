@@ -54,8 +54,8 @@ export const getCategories = async (payload) => {
     .query({
       variables: Object.assign({}, payload, { collection: CollectionType.CATEGORY }),
       query: gql`
-                  query Categories($skip: Int, $limit: Int, $collection: String) {
-                      categories(skip: $skip, limit: $limit) {
+                  query Categories($skip: Int, $limit: Int, $collection: String, $search: String) {
+                      categories(skip: $skip, limit: $limit, search: $search) {
                           id
                           code
                           name
