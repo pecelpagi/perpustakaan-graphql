@@ -3,12 +3,11 @@ import update from "immutability-helper";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
-import { graphql } from "graphql";
 import FormValidation from "~/components/FormValidation";
-import InputText from "~/components/InputText";
 import BrowseData from "~/components/BrowseData";
 import DatePicker from "~/components/DatePicker";
 import * as graphqlApi from "../../data";
+import { catchError } from "~/utils";
 
 const bookColumns = [
   {
@@ -91,6 +90,12 @@ class PeminjamanDetail extends React.Component {
 
   componentWillMount = () => {
     this.setupData();
+  }
+
+  doShowingNotification = (val) => {
+    const { addNotification } = this.props;
+
+    addNotification(val);
   }
 
   setupData = async () => {
@@ -299,32 +304,6 @@ class PeminjamanDetail extends React.Component {
     return (
       <FormValidation ref={(c) => { this.form = c; }}>
         <div className="row mb-sm">
-          <div className="col-sm-12">
-            <div className="form-group position-relative mb-reset">
-              <BrowseData
-                label="Buku"
-                placeholder="Pilih Buku"
-                columns={bookColumns}
-                value={form.book}
-                changeEvent={this.changeBookHandler}
-                onFetch={this.onFetchBook}
-              />
-              <input
-                ref={(c) => { this.bookHidden = c; }}
-                className="hide-for-validation"
-                name="bookHidden"
-                type="text"
-                value={form.book.id}
-                onChange={() => { }}
-                required
-              />
-            </div>
-            <FieldFeedbacks for="bookHidden">
-              <FieldFeedback when="valueMissing">Buku wajib dipilih</FieldFeedback>
-            </FieldFeedbacks>
-          </div>
-        </div>
-        <div className="row mb-sm">
           <div className="col-sm-9">
             <div className="form-group position-relative mb-reset">
               <BrowseData
@@ -353,6 +332,32 @@ class PeminjamanDetail extends React.Component {
             <DatePicker label="Tanggal Pinjam" value={form.borrow_date} onChange={val => this.changeValueHandler("borrow_date", val)} />
           </div>
         </div>
+        <div className="row mb-sm">
+          <div className="col-sm-12">
+            <div className="form-group position-relative mb-reset">
+              <BrowseData
+                label="Buku"
+                placeholder="Pilih Buku"
+                columns={bookColumns}
+                value={form.book}
+                changeEvent={this.changeBookHandler}
+                onFetch={this.onFetchBook}
+              />
+              <input
+                ref={(c) => { this.bookHidden = c; }}
+                className="hide-for-validation"
+                name="bookHidden"
+                type="text"
+                value={form.book.id}
+                onChange={() => { }}
+                required
+              />
+            </div>
+            <FieldFeedbacks for="bookHidden">
+              <FieldFeedback when="valueMissing">Buku wajib dipilih</FieldFeedback>
+            </FieldFeedbacks>
+          </div>
+        </div>
       </FormValidation>
     );
   }
@@ -374,23 +379,36 @@ class PeminjamanDetail extends React.Component {
     const {
       form, type,
     } = this.state;
+    let notifValue = null;
+
     this.updateButtonsState(true, true);
 
-    const isFormValid = await this.form.validateForm();
+    try {
+      const isFormValid = await this.form.validateForm();
 
-    if (isFormValid) {
-      const payload = {
-        ...form,
-        book_id: form.book.id,
-        member_id: form.member.id,
-      };
-      delete payload.book;
-      delete payload.member;
-      if (type === "create") {
-        await graphqlApi.borrowBook(payload);
+      if (isFormValid) {
+        const payload = {
+          ...form,
+          book_id: form.book.id,
+          member_id: form.member.id,
+        };
+        delete payload.book;
+        delete payload.member;
+        if (type === "create") {
+          await graphqlApi.borrowBook(payload);
+          notifValue = {
+            title: "Berhasil",
+            message: "Peminjaman buku tersimpan",
+            level: "success",
+          };
+        }
       }
-      this.gotoBasePath();
-      return;
+    } catch (e) {
+      notifValue = {
+        title: "Peminjaman Gagal",
+        message: catchError(e),
+        level: "error",
+      };
     }
 
     this.updateButtonsState(false, true);
@@ -398,6 +416,12 @@ class PeminjamanDetail extends React.Component {
     this.setState({
       isFormSubmitted: true,
     });
+
+    if (notifValue) {
+      this.doShowingNotification(notifValue);
+      if (notifValue.level === "success") this.gotoBasePath();
+      if (notifValue.level === "error") this.updateButtonsState();
+    }
   }
 
   renderPanelBody = () => {

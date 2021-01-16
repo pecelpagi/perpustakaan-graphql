@@ -9,13 +9,16 @@ const Category = require('../models/categories');
 const Book = require('../models/books');
 const Member = require('../models/members');
 const Borrowing = require('../models/borrowings');
+const Setting = require('../models/settings');
 
 const transactions = require('../transactions/transactions');
+
+const SETTING_ID = "6002613c7d1e3d54499662c3";
 
 const {
     GraphQLObjectType, GraphQLString, GraphQLSchema,
     GraphQLID, GraphQLList, GraphQLBoolean, GraphQLInt,
-    GraphQLNonNull,
+    GraphQLNonNull, GraphQLFloat
 } = graphql;
 
 const verifyToken = (token) => {
@@ -44,6 +47,7 @@ const BorrowType = new GraphQLObjectType({
         },
         borrow_date: { type: GraphQLString },
         return_date: { type: GraphQLString },
+        late_charge: { type: GraphQLFloat },
     }),
 });
 
@@ -85,6 +89,15 @@ const CategoryType = new GraphQLObjectType({
         id: { type: GraphQLID },
         code: { type: GraphQLString },
         name: { type: GraphQLString },
+    }),
+});
+
+const SettingType = new GraphQLObjectType({
+    name: 'Setting',
+    fields: () => ({
+        late_charge: { type: GraphQLFloat },
+        max_loan_duration: { type: GraphQLInt },
+        max_loan_qty: { type: GraphQLInt },
     }),
 });
 
@@ -335,6 +348,13 @@ const RootQuery = new GraphQLObjectType({
                 return retval;
             }
         },
+        setting: {
+            type: SettingType,
+            resolve: async () => {
+                const retval = await Setting.findById(SETTING_ID);
+                return retval;
+            }
+        }
     }
 });
 
@@ -504,6 +524,17 @@ const Mutation = new GraphQLObjectType({
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
                 return Member.findByIdAndRemove(args.id);
+            }
+        },
+        updateSetting: {
+            type: SettingType,
+            args: {
+                late_charge: { type: new GraphQLNonNull(GraphQLFloat) },
+                max_loan_qty: { type: new GraphQLNonNull(GraphQLInt) },
+                max_loan_duration: { type: new GraphQLNonNull(GraphQLInt) },
+            },
+            resolve(parent, args) {
+                return Setting.findByIdAndUpdate(SETTING_ID, args);
             }
         },
         login: {

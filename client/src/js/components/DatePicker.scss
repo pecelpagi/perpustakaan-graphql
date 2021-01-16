@@ -21,7 +21,7 @@
     outline: none !important;
     box-shadow: none !important;
     i {
-        margin-left: 18px;
+        margin-right: 10px;
     }
 }
 .react-datepicker__navigation--next {
@@ -29,4 +29,17 @@
 }
 .react-datepicker__navigation--previous {
     border-right-color: #ccc;
+}
+
+.react-datepicker-popper {
+    z-index: 3;
+}
+
+.react-datepicker__day {
+    padding: 5px;
+    width: 2.65rem;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
 }

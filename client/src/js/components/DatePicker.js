@@ -13,8 +13,8 @@ const DatePickerComponent = ({ label, value, onChange }) => {
 
   const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <button ref={ref} type="button" className="btn btn-date-picker" onClick={onClick}>
-      {moment(value, "MM/DD/YYYY").format("DD MMMM YYYY")}
       <i className="fa fa-calendar" />
+      {moment(value, "MM/DD/YYYY").format("DD MMMM YYYY")}
     </button>
   ));
 
@@ -26,6 +26,7 @@ const DatePickerComponent = ({ label, value, onChange }) => {
           selected={selectedDate}
           onChange={val => onChange(moment(val).format("YYYY-MM-DD"))}
           customInput={<CustomInput />}
+          popperPlacement="top-end"
         />
       </div>
     </div>

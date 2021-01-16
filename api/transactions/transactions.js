@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const moment = require("moment");
 const Book = require('../models/books');
 const Borrowing = require('../models/borrowings');
+const Setting = require('../models/settings');
+
+const SETTING_ID = "6002613c7d1e3d54499662c3";
 
 const createCode = (length = 8) => {
     let result = "";
@@ -18,10 +21,18 @@ const transactions = {
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
-            const stillBorrowing = await Borrowing.findOne({ member_id: args.member_id, return_date: '-' });
+            // moment().diff(moment('2020-12-27', 'YYYY-MM-DD'), 'days')
 
-            if (stillBorrowing) {
-                throw new Error("Buku belum dikembalikan");
+            // jumlah yang belum dikembalikan
+            const borrowingLength = await Borrowing.countDocuments({
+                return_date: "-",
+                member_id: args.member_id,
+            });
+
+            const settingData = await Setting.findById(SETTING_ID);
+
+            if (borrowingLength >= settingData.max_loan_qty) {
+                throw new Error(`Maksimal peminjaman ${settingData.max_loan_qty} buku`);
             }
 
             const book = await Book.findById(args.book_id).session(session);
@@ -44,8 +55,9 @@ const transactions = {
                 member_id: args.member_id,
                 borrow_date: args.borrow_date,
                 return_date: '-',
+                late_charge: 0,
             };
-            let borrowBook = await Borrowing.create(payload);
+            let borrowBook = await Borrowing.create([payload], { session: session });
 
             // commit the changes if everything was successful
             await session.commitTransaction();

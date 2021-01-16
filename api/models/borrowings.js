@@ -7,6 +7,7 @@ const modelSchema = new Schema({
     member_id: String,
     borrow_date: String,
     return_date: String,
+    late_charge: Number,
 });
 
 module.exports = mongoose.model('Borrowing', modelSchema);

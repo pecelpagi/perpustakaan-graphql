@@ -67,6 +67,11 @@ const menuData = () => {
           title: "Peminjaman Baru",
           link: "/peminjaman/pinjam",
         },
+        {
+          id: "3.3",
+          title: "Pengaturan",
+          link: "/pengaturan",
+        },
       ],
     },
     {

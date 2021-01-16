@@ -28,6 +28,10 @@ const columns = [
     id: "return_date_formatted",
     title: "Tanggal Kembali",
   },
+  {
+    id: "late_charge",
+    title: "Denda",
+  },
 ];
 class Peminjaman extends React.Component {
   constructor(props) {
@@ -74,6 +78,7 @@ class Peminjaman extends React.Component {
       member_name: `${x.member.registration_number}: ${x.member.name}`,
       borrow_date_formatted: moment(x.borrow_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
       return_date_formatted: x.return_date !== "-" ? moment(x.return_date, "YYYY-MM-DD").format("DD MMMM YYYY") : "Belum Dikembalikan",
+      late_charge: x.late_charge || 0,
     })));
 
     return { data: newData, totalPage: metaData.total_page };

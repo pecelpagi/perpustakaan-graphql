@@ -88,6 +88,23 @@ export const getCategory = async (id) => {
   return res.data;
 };
 
+export const getSetting = async () => {
+  const res = await Util.graphqlClient
+    .query({
+      query: gql`
+                  query Setting {
+                      setting {
+                        late_charge,
+                        max_loan_duration,
+                        max_loan_qty,
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
+};
+
 export const login = async (payload) => {
   const res = await Util.graphqlClient
     .mutate({
@@ -159,6 +176,25 @@ export const deleteCategory = async (id) => {
 
   return res.data.deleteCategory;
 };
+
+export const updateSetting = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation UpdateSetting($late_charge: Float!, $max_loan_duration: Int!, $max_loan_qty: Int!) {
+                    updateSetting(late_charge: $late_charge, max_loan_duration: $max_loan_duration, max_loan_qty: $max_loan_qty) {
+                      late_charge
+                      max_loan_duration
+                      max_loan_qty
+                    }
+                }
+                `,
+    });
+
+  return res.data.updateSetting;
+};
+
 
 export const getBook = async (id) => {
   const res = await Util.graphqlClient
@@ -403,6 +439,7 @@ export const getBorrowings = async (payload) => {
                         }
                         borrow_date
                         return_date
+                        late_charge
                       }
                       meta_data(collection: $collection, limit: $limit) {
                         total_page
