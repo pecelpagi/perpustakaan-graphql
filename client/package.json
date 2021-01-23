@@ -61,6 +61,7 @@
     "cropperjs": "^1.5.2",
     "graphql": "^15.3.0",
     "immutability-helper": "^2.6.4",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.11",
     "moment": "^2.20.1",
     "numeral": "^2.0.6",

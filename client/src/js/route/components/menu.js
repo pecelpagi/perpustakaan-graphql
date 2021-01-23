@@ -1,6 +1,14 @@
-import { getToken } from "../../utils";
+import jwtDecode from "jwt-decode";
+import { getToken, ishasProperty } from "../../utils";
 
 const isAuthenticated = (getToken() && getToken().length > 0);
+
+const checkIsMember = () => {
+  const decoded = jwtDecode(getToken());
+
+  return ishasProperty(decoded.data, "member_id");
+};
+
 const menuData = () => {
   if (!isAuthenticated) {
     return [
@@ -18,6 +26,40 @@ const menuData = () => {
             id: "2.3",
             title: "Daftar Kategori",
             link: "/categories",
+          },
+        ],
+      },
+    ];
+  }
+
+  if (checkIsMember()) {
+    return [
+      {
+        id: "2",
+        title: "Koleksi Pustaka",
+        icon: "fa fa-book",
+        children: [
+          {
+            id: "2.1",
+            title: "Lihat Koleksi",
+            link: "/books",
+          },
+          {
+            id: "2.3",
+            title: "Daftar Kategori",
+            link: "/categories",
+          },
+        ],
+      },
+      {
+        id: "3",
+        title: "Peminjaman",
+        icon: "fa fa-calendar",
+        children: [
+          {
+            id: "3.1",
+            title: "Status Peminjaman",
+            link: "/peminjaman-list",
           },
         ],
       },
