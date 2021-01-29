@@ -1,5 +1,6 @@
 /* eslint prop-types: 0 */
 import _ from "lodash";
+import jwtDecode from "jwt-decode";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { API_BASE_URL } from "../constants";
 
@@ -16,6 +17,12 @@ export const setToken = (_token) => {
 
 export const removeToken = () => {
   localStorage.removeItem("usertoken"); // eslint-disable-line no-undef
+};
+
+export const getDecodedToken = () => {
+  const decoded = jwtDecode(getToken());
+
+  return decoded.data;
 };
 
 export const getBasePath = () => {

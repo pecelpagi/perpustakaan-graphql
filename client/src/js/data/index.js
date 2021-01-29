@@ -521,3 +521,19 @@ export const getBorrowing = async (id) => {
 
   return res.data;
 };
+
+export const updatePassword = async (payload) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: payload,
+      mutation: gql`
+                mutation UpdatePassword($username: String!, $old_password: String!, $new_password: String!, $confirm_new_password: String!) {
+                    updatePassword(username: $username, old_password: $old_password, new_password: $new_password, confirm_new_password: $confirm_new_password) {
+                      username
+                    }
+                }
+                `,
+    });
+
+  return res.data.borrowBook;
+};

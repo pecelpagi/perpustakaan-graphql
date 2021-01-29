@@ -44,7 +44,7 @@ class Header extends React.Component {
             <span><i className="fa fa-angle-down" /></span>
           </button>
           <ul className="dropdown-menu">
-            <li><a href="#">Ubah Password</a></li>
+            <li><a href="/ubah-password">Ubah Password</a></li>
             <li><a href="#" onClick={this.logout}>Logout</a></li>
           </ul>
         </div>

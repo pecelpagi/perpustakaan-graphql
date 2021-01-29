@@ -13,6 +13,8 @@ const Setting = require('../models/settings');
 
 const transactions = require('../transactions/transactions');
 
+const SALT_ROUNDS = 10;
+const SALT_PASSWD = bcrypt.genSaltSync(SALT_ROUNDS);
 const SETTING_ID = "6002613c7d1e3d54499662c3";
 
 const {
@@ -20,6 +22,8 @@ const {
     GraphQLID, GraphQLList, GraphQLBoolean, GraphQLInt,
     GraphQLNonNull, GraphQLFloat
 } = graphql;
+
+const ishasProperty = (obj, key) => Object.hasOwnProperty.call(obj, key);
 
 const verifyToken = (token) => {
     const data = jwt.verify(token, Constants.SECRET_KEY);
@@ -57,7 +61,6 @@ const UserType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         username: { type: GraphQLString },
-        passwd: { type: GraphQLString },
         fullname: { type: GraphQLString },
     }),
 });
@@ -535,6 +538,44 @@ const Mutation = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 return Setting.findByIdAndUpdate(SETTING_ID, args);
+            }
+        },
+        updatePassword: {
+            type: UserType,
+            args: {
+                username: { type: new GraphQLNonNull(GraphQLString) },
+                old_password: { type: new GraphQLNonNull(GraphQLString) },
+                new_password: { type: new GraphQLNonNull(GraphQLString) },
+                confirm_new_password: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve: async (parent, args) => {
+                const found = await User.findOne({ username: args.username });
+                let data = {};
+                let isPasswordValid = false;
+
+                if (!found) throw new Error("User tidak ditemukan"); 
+
+                if (found) {
+                    isPasswordValid = bcrypt.compareSync(args.old_password, found.passwd);
+                    if (!isPasswordValid) throw new Error("Periksa kembali password lama anda"); 
+                    if (String(args.new_password) !== String(args.confirm_new_password)) throw new Error("Periksa kembali konfirmasi password baru anda"); 
+                    
+                    data = JSON.parse(JSON.stringify(found));
+                    delete data.passwd;
+    
+                    if (ishasProperty(data, 'member_id')) {
+                        const member = await Member.findById(data.member_id);
+                        Object.assign(data, {
+                            fullname: member.name,
+                        });
+                    }
+
+                    await User.findByIdAndUpdate(data._id, {
+                        passwd: bcrypt.hashSync(args.new_password, SALT_PASSWD)
+                    });
+                }
+
+                return data;
             }
         },
         login: {
