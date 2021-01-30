@@ -1,16 +1,36 @@
 /* eslint prop-types: 0 */
 import React from "react";
 import "./styles.scss";
-import { getToken, removeToken } from "../../utils";
+import {
+  getToken, removeToken, getDecodedToken, ishasProperty,
+} from "../../utils";
+import * as graphqlApi from "../../data";
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      fullname: "-",
       title: "Perpustakaan",
       isShowingDropdown: false,
     };
+  }
+
+  componentDidMount = () => {
+    this.setupFullname();
+  }
+
+  setupFullname = async () => {
+    let fullname = "Administrator";
+    const decodedToken = getDecodedToken();
+
+    if (decodedToken && ishasProperty(decodedToken, "member_id")) {
+      const res = await graphqlApi.getMember(decodedToken.member_id);
+      fullname = res.member.name;
+    }
+
+    this.setState({ fullname });
   }
 
   navToLogin = () => {
@@ -31,6 +51,7 @@ class Header extends React.Component {
   }
 
   renderAuthComponent = (isShowingDropdown) => {
+    const { fullname } = this.state;
     const isAuthenticated = (getToken() && getToken().length > 0);
 
     if (isAuthenticated) {
@@ -39,7 +60,8 @@ class Header extends React.Component {
           <button className="btn btn-default dropdown-toggle" type="button" onClick={this.showDropdown}>
             <span><i className="fa fa-user" /></span>
                             &nbsp;
-                            Administrator
+                            &nbsp;
+                            {fullname}
                             {" "}
             <span><i className="fa fa-angle-down" /></span>
           </button>

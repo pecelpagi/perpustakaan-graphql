@@ -42,7 +42,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (!isAuthenticated ? (
-      <Component {...props} />
+      <Component {...props} {...rest} />
     ) : (
         <Redirect
           to={{

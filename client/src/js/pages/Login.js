@@ -4,14 +4,14 @@ import update from "immutability-helper";
 import { FieldFeedbacks, FieldFeedback } from "react-form-with-constraints";
 import FormValidation from "~/components/FormValidation";
 import * as graphqlApi from "../data";
-import { setToken } from "../utils";
+import { setToken, catchError, } from "../utils";
 import InputText from "../components/InputText";
 
 class Login extends React.Component {
   initialButtonActions = [
     {
       id: "0",
-      type: "primary",
+      type: "primary btn-block",
       content: (
         <span>
           Login
@@ -33,6 +33,11 @@ class Login extends React.Component {
       },
       footerButtons: this.initialButtonActions,
     };
+  }
+
+  doShowingNotification = (val) => {
+    const { addNotification } = this.props;
+    addNotification(val);
   }
 
   onInputChangeValidate = ({ target }) => {
@@ -77,15 +82,24 @@ class Login extends React.Component {
     const { form } = this.state;
     this.updateButtonsState(true);
 
-    const isFormValid = await this.form.validateForm();
+    try {
+      const isFormValid = await this.form.validateForm();
 
-    if (isFormValid) {
-      const res = await graphqlApi.login(form);
+      if (isFormValid) {
+        const res = await graphqlApi.login(form);
 
-      if (res.token) {
-        setToken(res.token);
-        location.href = "/books";
+        if (res.token) {
+          setToken(res.token);
+          location.href = "/books";
+        }
       }
+    } catch (e) {
+      this.doShowingNotification({
+        title: "Login Gagal",
+        message: catchError(e),
+        level: "error",
+      });
+      this.updateButtonsState(false);
     }
 
     this.setState({

@@ -20,6 +20,8 @@ export const removeToken = () => {
 };
 
 export const getDecodedToken = () => {
+  if (!getToken()) return null;
+
   const decoded = jwtDecode(getToken());
 
   return decoded.data;

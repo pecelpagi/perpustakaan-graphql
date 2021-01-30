@@ -589,12 +589,16 @@ const Mutation = new GraphQLObjectType({
                 let data = {};
                 let isPasswordValid = false;
 
+                if (!found) throw new Error("Username tidak ditemukan");
+
                 if (found) {
                     isPasswordValid = bcrypt.compareSync(args.password, found.passwd);
                     data = found;
         
                     delete data.passwd;
                 }
+
+                if (!isPasswordValid) throw new Error("Periksa kembali password anda");
 
                 let retval = {
                     "token": "",
