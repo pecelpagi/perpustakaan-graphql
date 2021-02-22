@@ -65,6 +65,7 @@ class App extends React.Component {
   render = () => (
     <Router>
       <Switch>
+        <PublicRoute exact path="/kunjungan/tambahkunjungan" component={asyncComponent(() => import("../pages/AddVisit"))} />
         <Route path="/">
             <div>
                 <Header />
