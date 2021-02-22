@@ -3,6 +3,9 @@ import React from "react";
 import update from "immutability-helper";
 import NotificationSystem from "react-notification-system";
 import InputText from "../../components/InputText";
+import * as graphqlApi from "../../data";
+import { catchError } from "../../utils";
+
 import "./styles.scss";
 
 class AddVisit extends React.Component {
@@ -45,18 +48,35 @@ class AddVisit extends React.Component {
     this.setState({ nomorInduk: val });
   }
 
-  handleSubmitAttendance = (e) => {
+  handleSubmitAttendance = async (e) => {
     if (e) e.preventDefault();
+
+    let notifValue = null;
+    const { nomorInduk } = this.state;
+
     this.updateButtonsState(true);
 
-    setTimeout(() => {
-      this.updateButtonsState(false);
-      this.showNotification({
-        title: "Success",
-        message: "asdasd",
+    try {
+      await graphqlApi.addAttendance(nomorInduk);
+      notifValue = {
+        title: "Berhasil",
+        message: "Data telah tersimpan",
         level: "success",
-      });
-    }, 2000);
+      };
+    } catch (err) {
+      notifValue = {
+        title: "Gagal",
+        message: catchError(err),
+        level: "error",
+        autoDismiss: 7,
+      };
+    }
+
+    this.updateButtonsState(false);
+
+    if (notifValue) {
+      this.showNotification(notifValue);
+    }
   }
 
   renderFormInput = () => {

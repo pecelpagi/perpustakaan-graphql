@@ -537,3 +537,21 @@ export const updatePassword = async (payload) => {
 
   return res.data.borrowBook;
 };
+
+export const addAttendance = async (registrationNumber) => {
+  const res = await Util.graphqlClient
+    .mutate({
+      variables: { registration_number: registrationNumber },
+      mutation: gql`
+                mutation AddAttendance($registration_number: String!) {
+                    addAttendance(registration_number: $registration_number) {
+                      id
+                      registration_number
+                      attendance_date
+                    }
+                }
+                `,
+    });
+
+  return res.data.addAttendance;
+};

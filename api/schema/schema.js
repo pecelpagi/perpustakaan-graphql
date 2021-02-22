@@ -10,6 +10,7 @@ const Book = require('../models/books');
 const Member = require('../models/members');
 const Borrowing = require('../models/borrowings');
 const Setting = require('../models/settings');
+const Attendance = require('../models/attendances');
 
 const transactions = require('../transactions/transactions');
 
@@ -29,6 +30,15 @@ const verifyToken = (token) => {
     const data = jwt.verify(token, Constants.SECRET_KEY);
     return data;
 }
+
+const AttendanceType = new GraphQLObjectType({
+    name: 'Attendance',
+    fields: () => ({
+        id: { type: GraphQLID },
+        registration_number: { type: GraphQLString },
+        attendance_date: { type: GraphQLString },
+    }),
+});
 
 const BorrowType = new GraphQLObjectType({
     name: 'Borrow',
@@ -364,6 +374,37 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        addAttendance: {
+            type: AttendanceType,
+            args: {
+                registration_number: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve: async (parent, args) => {
+                let filter = {
+                    registration_number: args.registration_number,
+                };
+
+                const findData = await Member.findOne(filter);
+                if (!findData) {
+                    throw new Error("Nomor Induk tidak ditemukan");
+                }
+
+                const payload = {
+                    registration_number: args.registration_number,
+                    attendance_date: moment().format('YYYY-MM-DD'),
+                };
+
+                const isAttendanceExist = await Attendance.findOne(payload);
+
+                if (isAttendanceExist) {
+                    const errMsg = `Kunjungan no induk ${payload.registration_number} pada tanggal ${moment().format('DD MMM YYYY')} sudah dicatat sebelumnya.`;
+                    throw new Error(errMsg);
+                }
+
+                let attendance = new Attendance(payload);
+                return attendance.save();
+            }
+        },
         borrowBook: {
             type: BorrowType,
             args: {
