@@ -66,6 +66,7 @@ class PeminjamanDetail extends React.Component {
       id: "",
       isFormSubmitted: false,
       type: "",
+      maxLoanDuration: 0,
       detail: {
         code: "",
         book_title: "",
@@ -100,6 +101,8 @@ class PeminjamanDetail extends React.Component {
 
   setupData = async () => {
     const { match: { params } } = this.props;
+
+    await this.fetchSetting();
 
     if (params.type === "detail") {
       await this.setupDetailData(params.id);
@@ -224,6 +227,15 @@ class PeminjamanDetail extends React.Component {
     }
   }
 
+  fetchSetting = async () => {
+    const res = await graphqlApi.getSetting();
+    const { setting: data } = res;
+
+    this.setState({
+      maxLoanDuration: data.max_loan_duration,
+    });
+  }
+
   onFetchBook = async (state) => {
     const payload = {
       limit: 10,
@@ -297,6 +309,13 @@ class PeminjamanDetail extends React.Component {
     );
   }
 
+  createMaxLoanDate = () => {
+    const { form, maxLoanDuration } = this.state;
+    const days = parseInt(maxLoanDuration, 10);
+    console.log('DEBUG-DAYS: ', days);
+    return moment(form.borrow_date, "YYYY-MM-DD").add(days, days > 1 ? "days" : "day").format("YYYY-MM-DD");
+  }
+
   formComponent = () => {
     const {
       form,
@@ -304,7 +323,7 @@ class PeminjamanDetail extends React.Component {
     return (
       <FormValidation ref={(c) => { this.form = c; }}>
         <div className="row mb-sm">
-          <div className="col-sm-9">
+          <div className="col-sm-6">
             <div className="form-group position-relative mb-reset">
               <BrowseData
                 label="Peminjam"
@@ -330,6 +349,9 @@ class PeminjamanDetail extends React.Component {
           </div>
           <div className="col-sm-3">
             <DatePicker label="Tanggal Pinjam" value={form.borrow_date} onChange={val => this.changeValueHandler("borrow_date", val)} />
+          </div>
+          <div className="col-sm-3">
+            <DatePicker label="Maksimal Pengembalian" value={this.createMaxLoanDate()} onChange={() => {}} readOnly />
           </div>
         </div>
         <div className="row mb-sm">
