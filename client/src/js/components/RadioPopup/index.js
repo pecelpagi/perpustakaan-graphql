@@ -266,7 +266,7 @@ class ModalPopup extends React.Component {
             <div className="modal-footer">
               <button
                 type="button"
-                className={`btn btn-default ${btnDisabled ? "disabled" : ""} pull-left`}
+                className={`btn ${btnDisabled ? "disabled" : ""} pull-left`}
                 onClick={this.hideModalHandler}>Batal</button>
               <button
                 type="button"

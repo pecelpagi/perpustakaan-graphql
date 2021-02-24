@@ -9,6 +9,21 @@ const CollectionType = {
   ATTENDANCE: "Attendance",
 };
 
+export const getRegistrationNumber = async () => {
+  const res = await Util.graphqlClient
+    .query({
+      query: gql`
+                  query {
+                      auto_code {
+                          registration_number
+                      }
+                  }
+    `,
+    });
+
+  return res.data.auto_code.registration_number;
+};
+
 export const getUsers = async () => {
   const res = await Util.graphqlClient
     .query({

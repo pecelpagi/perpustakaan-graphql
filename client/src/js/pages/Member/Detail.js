@@ -70,6 +70,17 @@ class MemberDetail extends React.Component {
     addNotification(message);
   }
 
+  setupRegistrationNumber = async () => {
+    const { form } = this.state;
+    const registrationNumber = await graphqlApi.getRegistrationNumber();
+
+    const newValue = update(form, {
+      registration_number: { $set: registrationNumber },
+    });
+
+    this.setState({ form: newValue });
+  }
+
   setupData = async () => {
     const { match: { params } } = this.props;
 
@@ -77,6 +88,7 @@ class MemberDetail extends React.Component {
       await this.setupDetailData(params.id);
     } else {
       this.setupBreadcrumbs("Tambah Data");
+      this.setupRegistrationNumber();
     }
   }
 
@@ -169,10 +181,10 @@ class MemberDetail extends React.Component {
           <div className="col-sm-6">
             <InputText
               label="No Induk"
-              changeEvent={(val, e) => this.changeValueHandler("registration_number", val, e)}
+              changeEvent={() => {}}
               value={String(form.registration_number)}
               name="registration_number"
-              disabled={type === "edit"}
+              disabled
               required
             />
             <FieldFeedbacks for="registration_number">

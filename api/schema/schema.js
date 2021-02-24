@@ -31,6 +31,13 @@ const verifyToken = (token) => {
     return data;
 }
 
+const AutoCodeType = new GraphQLObjectType({
+    name: 'AutoCode',
+    fields: () => ({
+        registration_number: { type: GraphQLString },
+    }),
+});
+
 const AttendanceType = new GraphQLObjectType({
     name: 'Attendance',
     fields: () => ({
@@ -185,9 +192,27 @@ const getMetaData = async (args) => {
     };
 }
 
+const getRegistrationNumber = async () => {
+    let findData = Member.findOne();
+
+    findData = findData.sort('-registration_number');
+
+    const res = await findData;
+
+    return (parseInt(res.registration_number, 10) + 1);
+}
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
+        auto_code: {
+            type: AutoCodeType,
+            resolve: async (parent, args) => {
+                const registrationNumber = await getRegistrationNumber();
+
+                return { registration_number: registrationNumber };
+            }
+        },
         users: {
             type: new GraphQLList(UserType),
             resolve(parent, args) {
