@@ -195,9 +195,9 @@ class ModalPopup extends React.Component {
   }
 
   showIfDataEmpty = () => {
-    const { popupData, filterText } = this.state;
+    const { popupData, filterText, loading } = this.state;
 
-    if (popupData.length === 0) {
+    if (popupData.length === 0 && !loading) {
       return (
         <div className="popup-overlay popup-overlay--show">
           <div className="popup-overlay__content">
