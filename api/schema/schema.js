@@ -37,6 +37,14 @@ const AttendanceType = new GraphQLObjectType({
         id: { type: GraphQLID },
         registration_number: { type: GraphQLString },
         attendance_date: { type: GraphQLString },
+        member: {
+            type: MemberType,
+            resolve(parent, args) {
+                return Member.findOne({
+                    registration_number: parent.registration_number
+                });
+            }
+        },
     }),
 });
 
@@ -167,6 +175,9 @@ const getMetaData = async (args) => {
     } else if(args.collection === 'Borrowing') {
         const totalData = await Borrowing.countDocuments(filter);
         totalPage = Math.ceil(totalData / args.limit);
+    } else if(args.collection === 'Attendance') {
+        const totalData = await Attendance.countDocuments(filter);
+        totalPage = Math.ceil(totalData / args.limit);
     }
 
     return {
@@ -229,6 +240,35 @@ const RootQuery = new GraphQLObjectType({
                 }
 
                 let findData = Member.find(filter);
+                
+                if (args.skip) {
+                    findData = findData.skip(args.skip);
+                }
+
+                if (args.limit) {
+                    findData = findData.limit(args.limit);
+                }
+
+                return findData;
+            }
+        },
+        attendances: {
+            type: new GraphQLList(AttendanceType),
+            args: { 
+                skip: { type: GraphQLInt },
+                limit: { type: GraphQLInt },
+                search: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                let filter = {};
+
+                if (args.search) {
+                    filter = {
+                        registration_number: new RegExp(args.search, "i"),
+                    }
+                }
+
+                let findData = Attendance.find(filter);
                 
                 if (args.skip) {
                     findData = findData.skip(args.skip);

@@ -6,6 +6,7 @@ const CollectionType = {
   BOOK: "Book",
   MEMBER: "Member",
   BORROWING: "Borrowing",
+  ATTENDANCE: "Attendance",
 };
 
 export const getUsers = async () => {
@@ -23,6 +24,30 @@ export const getUsers = async () => {
     });
 
   return res.data.users;
+};
+
+export const getMembers = async (payload) => {
+  const res = await Util.graphqlClient
+    .query({
+      variables: Object.assign({}, payload, { collection: CollectionType.MEMBER }),
+      query: gql`
+                  query Members($skip: Int, $limit: Int, $collection: String) {
+                      members(skip: $skip, limit: $limit) {
+                          id
+                          registration_number
+                          name
+                          address
+                          email
+                          phone
+                      }
+                      meta_data(collection: $collection, limit: $limit) {
+                        total_page
+                      }
+                  }
+    `,
+    });
+
+  return res.data;
 };
 
 export const getBooks = async (payload) => {
@@ -297,19 +322,20 @@ export const deleteBook = async (id) => {
   return res.data.deleteBook;
 };
 
-export const getMembers = async (payload) => {
+export const getAttendances = async (payload) => {
   const res = await Util.graphqlClient
     .query({
-      variables: Object.assign({}, payload, { collection: CollectionType.MEMBER }),
+      variables: Object.assign({}, payload, { collection: CollectionType.ATTENDANCE }),
       query: gql`
-                  query Members($skip: Int, $limit: Int, $collection: String) {
-                      members(skip: $skip, limit: $limit) {
+                  query Attendances($skip: Int, $limit: Int, $collection: String) {
+                      attendances(skip: $skip, limit: $limit) {
                           id
                           registration_number
-                          name
-                          address
-                          email
-                          phone
+                          attendance_date
+                          member {
+                            id
+                            name
+                          }
                       }
                       meta_data(collection: $collection, limit: $limit) {
                         total_page

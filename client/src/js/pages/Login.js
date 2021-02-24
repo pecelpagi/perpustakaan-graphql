@@ -90,7 +90,7 @@ class Login extends React.Component {
 
         if (res.token) {
           setToken(res.token);
-          location.href = "/books";
+          location.href = "/riwayat-kunjungan";
         }
       }
     } catch (e) {

@@ -15,7 +15,7 @@ require("../sass/styles.scss");
 const RedirectToDashboard = () => (
     <Redirect
       to={{
-        pathname: "/dashboard",
+        pathname: "/riwayat-kunjungan",
       }}
     />
 );
@@ -46,7 +46,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
     ) : (
         <Redirect
           to={{
-            pathname: "/books",
+            pathname: "/riwayat-kunjungan",
           }}
         />
     ))
@@ -74,6 +74,7 @@ class App extends React.Component {
                   <Route exact path="/" component={RedirectToDashboard} />
                   <AuthRoute path="/auth/login" component={asyncComponent(() => import("../pages/Login"))} />
                   <PrivateRoute path="/dashboard" component={asyncComponent(() => import("../pages/Dashboard"))} />
+                  <PrivateRoute path="/riwayat-kunjungan" component={asyncComponent(() => import("../pages/VisitHistory"))} />
                   <PublicRoute exact path="/books/:id_category" component={asyncComponent(() => import("../pages/Book"))} />
                   <PublicRoute exact path="/books" component={asyncComponent(() => import("../pages/Book"))} />
                   <PublicRoute exact path="/book/:type/:id" component={asyncComponent(() => import("../pages/Book/Detail"))} />

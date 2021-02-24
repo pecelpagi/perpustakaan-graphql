@@ -68,6 +68,12 @@ const menuData = () => {
 
   return [
     {
+      id: "1",
+      title: "Riwayat Kunjungan",
+      icon: "fa fa-clock-o",
+      link: "/riwayat-kunjungan",
+    },
+    {
       id: "2",
       title: "Koleksi Pustaka",
       icon: "fa fa-book",

@@ -138,7 +138,7 @@ class Table extends React.Component {
         {data.length === 0 && (emptyData)}
         {data.map((x, i) => (
           <tr key={i} onClick={() => { rowClick(x); }}>
-            {columns.map(col => (<td key={`${i}${col.id}`}>{ishasProperty(col, "customComponent") ? col.customComponent(x[col.id]) : x[col.id]}</td>))}
+            {columns.map(col => (<td key={`${i}${col.id}`}>{ishasProperty(col, "customComponent") ? col.customComponent(x[col.id], x) : x[col.id]}</td>))}
           </tr>
         ))}
       </tbody>
