@@ -69,7 +69,12 @@ class Setting extends React.Component {
     }
 
     fetchSetting = async () => {
+      const { startLoading, endLoading } = this.props;
+
+      startLoading();
       const res = await graphqlApi.getSetting();
+      endLoading();
+
       const { setting: data } = res;
 
       this.setState({

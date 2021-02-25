@@ -100,7 +100,9 @@ class PeminjamanDetail extends React.Component {
   }
 
   setupData = async () => {
-    const { match: { params } } = this.props;
+    const { match: { params }, startLoading, endLoading } = this.props;
+
+    startLoading();
 
     await this.fetchSetting();
 
@@ -111,6 +113,8 @@ class PeminjamanDetail extends React.Component {
         this.setupBreadcrumbs("Peminjaman Baru");
       });
     }
+
+    endLoading();
   }
 
   setupBreadcrumbs = (text) => {

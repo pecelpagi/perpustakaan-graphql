@@ -199,6 +199,8 @@ const getRegistrationNumber = async () => {
 
     const res = await findData;
 
+    if (!res) return '10121';
+
     return (parseInt(res.registration_number, 10) + 1);
 }
 

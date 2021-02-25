@@ -75,7 +75,9 @@ class BookDetail extends React.Component {
   }
 
   setupData = async () => {
-    const { match: { params } } = this.props;
+    const { match: { params }, startLoading, endLoading } = this.props;
+
+    startLoading();
 
     if (params.type === "edit" || params.type === "detail") {
       await this.setupDetailData(params.id, params.type);
@@ -84,6 +86,8 @@ class BookDetail extends React.Component {
         this.setupBreadcrumbs("Tambah Data");
       });
     }
+
+    endLoading();
   }
 
   setupBreadcrumbs = (text) => {

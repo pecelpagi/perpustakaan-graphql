@@ -1,6 +1,7 @@
 /* eslint prop-types: 0 */
 import React from "react";
 import NotificationSystem from "react-notification-system";
+import OverlayLoading from "./OverlayLoading";
 
 class Layout extends React.Component {
   constructor(props) {
@@ -71,6 +72,14 @@ class Layout extends React.Component {
     );
   }
 
+  startLoading = () => {
+    this.overlayLoading.startLoading();
+  }
+
+  endLoading = () => {
+    this.overlayLoading.endLoading();
+  }
+
   addNotification = (val) => {
     this.notificationSystem.addNotification(val);
   };
@@ -84,6 +93,8 @@ class Layout extends React.Component {
         assignButtons: this.assignButtonsHandler,
         assignBreadcrumbs: this.assignBreadcrumbsHandler,
         addNotification: this.addNotification,
+        startLoading: this.startLoading,
+        endLoading: this.endLoading,
       }),
     );
 
@@ -92,6 +103,7 @@ class Layout extends React.Component {
         {this.renderButtonsAndBreadcrumbs()}
         {childrenWithProps}
         <NotificationSystem ref={(c) => { this.notificationSystem = c; }} />
+        <OverlayLoading ref={(c) => { this.overlayLoading = c; }} />
       </div>
     );
   }

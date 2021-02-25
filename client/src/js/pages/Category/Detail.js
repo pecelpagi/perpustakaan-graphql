@@ -68,13 +68,17 @@ class CategoryDetail extends React.Component {
   }
 
   setupData = async () => {
-    const { match: { params } } = this.props;
+    const { match: { params }, startLoading, endLoading } = this.props;
+
+    startLoading();
 
     if (params.type === "edit") {
       await this.setupDetailData(params.id);
     } else {
       this.setupBreadcrumbs("Tambah Data");
     }
+
+    endLoading();
   }
 
   setupBreadcrumbs = (text) => {
