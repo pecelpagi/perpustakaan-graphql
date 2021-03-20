@@ -31,6 +31,9 @@ const transactions = {
 
             const settingData = await Setting.findById(SETTING_ID);
 
+            const days = parseInt(settingData.max_loan_duration, 10);
+            const maxReturnDate = moment(args.borrow_date, "YYYY-MM-DD").add(days, days > 1 ? "days" : "day").format("YYYY-MM-DD");
+
             if (borrowingLength >= settingData.max_loan_qty) {
                 throw new Error(`Maksimal peminjaman ${settingData.max_loan_qty} buku`);
             }
@@ -55,6 +58,7 @@ const transactions = {
                 member_id: args.member_id,
                 borrow_date: args.borrow_date,
                 return_date: '-',
+                max_return_date: maxReturnDate,
                 late_charge: 0,
             };
             let borrowBook = await Borrowing.create([payload], { session: session });

@@ -316,7 +316,6 @@ class PeminjamanDetail extends React.Component {
   createMaxLoanDate = () => {
     const { form, maxLoanDuration } = this.state;
     const days = parseInt(maxLoanDuration, 10);
-    console.log('DEBUG-DAYS: ', days);
     return moment(form.borrow_date, "YYYY-MM-DD").add(days, days > 1 ? "days" : "day").format("YYYY-MM-DD");
   }
 

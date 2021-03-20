@@ -13,12 +13,12 @@ const columns = [
   {
     id: "book_title",
     title: "Judul",
-    width: "30%",
+    width: "25%",
   },
   {
     id: "member_name",
     title: "Peminjam",
-    width: "22%",
+    width: "20%",
   },
   {
     id: "borrow_date_formatted",
@@ -27,6 +27,10 @@ const columns = [
   {
     id: "return_date_formatted",
     title: "Tanggal Kembali",
+  },
+  {
+    id: "max_return_date_formatted",
+    title: "Max. Pengembalian",
   },
   {
     id: "late_charge",
@@ -78,6 +82,7 @@ class Peminjaman extends React.Component {
       member_name: `${x.member.registration_number}: ${x.member.name}`,
       borrow_date_formatted: moment(x.borrow_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
       return_date_formatted: x.return_date !== "-" ? moment(x.return_date, "YYYY-MM-DD").format("DD MMMM YYYY") : "Belum Dikembalikan",
+      max_return_date_formatted: moment(x.max_return_date, "YYYY-MM-DD").format("DD MMMM YYYY"),
       late_charge: x.late_charge || 0,
     })));
 

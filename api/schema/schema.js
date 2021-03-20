@@ -76,6 +76,7 @@ const BorrowType = new GraphQLObjectType({
         },
         borrow_date: { type: GraphQLString },
         return_date: { type: GraphQLString },
+        max_return_date: { type: GraphQLString },
         late_charge: { type: GraphQLFloat },
     }),
 });

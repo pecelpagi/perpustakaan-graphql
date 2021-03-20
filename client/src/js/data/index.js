@@ -92,6 +92,7 @@ export const getBooks = async (payload) => {
 export const getCategories = async (payload) => {
   const res = await Util.graphqlClient
     .query({
+      fetchPolicy: "no-cache",
       variables: Object.assign({}, payload, { collection: CollectionType.CATEGORY }),
       query: gql`
                   query Categories($skip: Int, $limit: Int, $collection: String, $search: String) {
@@ -462,6 +463,7 @@ export const deleteMember = async (id) => {
 export const getBorrowings = async (payload) => {
   const res = await Util.graphqlClient
     .query({
+      fetchPolicy: "no-cache",
       variables: Object.assign({}, payload, { collection: CollectionType.BORROWING }),
       query: gql`
                   query Borrowings($skip: Int, $limit: Int, $collection: String) {
@@ -480,6 +482,7 @@ export const getBorrowings = async (payload) => {
                         }
                         borrow_date
                         return_date
+                        max_return_date
                         late_charge
                       }
                       meta_data(collection: $collection, limit: $limit) {
