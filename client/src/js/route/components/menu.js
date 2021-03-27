@@ -1,13 +1,6 @@
-import jwtDecode from "jwt-decode";
-import { getToken, ishasProperty } from "../../utils";
+import { getToken, checkIsMember } from "../../utils";
 
 const isAuthenticated = (getToken() && getToken().length > 0);
-
-const checkIsMember = () => {
-  const decoded = jwtDecode(getToken());
-
-  return ishasProperty(decoded.data, "member_id");
-};
 
 const menuData = () => {
   if (!isAuthenticated) {
@@ -34,6 +27,12 @@ const menuData = () => {
 
   if (checkIsMember()) {
     return [
+      {
+        id: "1",
+        title: "Riwayat Kunjungan",
+        icon: "fa fa-clock-o",
+        link: "/riwayat-kunjungan",
+      },
       {
         id: "2",
         title: "Koleksi Pustaka",

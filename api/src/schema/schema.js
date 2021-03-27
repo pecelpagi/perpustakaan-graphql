@@ -43,15 +43,15 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve: (parent, args) => ApiController.getMembers(args)
         },
-        attendances: {
+        attendances: withVerifyToken({
             type: new GraphQLList(SchemaType.AttendanceType),
             args: { 
                 skip: { type: GraphQLInt },
                 limit: { type: GraphQLInt },
                 search: { type: GraphQLString },
             },
-            resolve: (parent, args) => ApiController.getAttendances(args)
-        },
+            resolveAfterVerify: (parent, args) => ApiController.getAttendances(args)
+        }),
         categories: {
             type: new GraphQLList(SchemaType.CategoryType),
             args: { 

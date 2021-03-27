@@ -1,5 +1,4 @@
 /* eslint prop-types: 0 */
-import _ from "lodash";
 import jwtDecode from "jwt-decode";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { API_BASE_URL } from "../constants";
@@ -55,4 +54,10 @@ export const catchError = (e) => {
   if (Object.prototype.hasOwnProperty.call(e, "message")) ({ message } = e);
   if (Object.prototype.hasOwnProperty.call(e, "error")) ({ error: message } = e);
   return message;
+};
+
+export const checkIsMember = () => {
+  const decoded = jwtDecode(getToken());
+
+  return ishasProperty(decoded.data, "member_id");
 };

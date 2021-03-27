@@ -11,6 +11,7 @@ import { isHasProperty } from '../utils';
 
 const verifyToken = (token) => {
     const data = jwt.verify(token, Constants.SECRET_KEY);
+
     return data;
 }
 
@@ -22,14 +23,19 @@ export const withVerifyToken = (schema) => {
         token: { type: new GraphQLNonNull(GraphQLString) },
     });
 
-    if (hasArgs) newArgs = Object.assign({}, schema.args);
+    if (hasArgs) newArgs = Object.assign({}, newArgs, schema.args);
 
     Object.assign(newSchema, { args: newArgs });
     
     const newResolve = async (parent, args) => {
-        verifyToken(args.token);
+        const decodedToken = verifyToken(args.token);
+        const isMember = isHasProperty(decodedToken.data, 'member_id');
 
-        const result = await schema.resolveAfterVerify(parent, args);
+        const payload = args;
+
+        if (isMember) Object.assign(payload, { member_id: decodedToken.data.member_id });
+
+        const result = await schema.resolveAfterVerify(parent, payload);
         
         return result;
     }

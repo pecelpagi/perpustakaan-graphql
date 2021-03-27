@@ -339,12 +339,13 @@ export const deleteBook = async (id) => {
 };
 
 export const getAttendances = async (payload) => {
+  const variables = Object.assign({}, payload, { collection: CollectionType.ATTENDANCE, token: Util.getToken() });
   const res = await Util.graphqlClient
     .query({
-      variables: Object.assign({}, payload, { collection: CollectionType.ATTENDANCE }),
+      variables,
       query: gql`
-                  query Attendances($skip: Int, $limit: Int, $collection: String) {
-                      attendances(skip: $skip, limit: $limit) {
+                  query Attendances($token: String!, $skip: Int, $limit: Int, $collection: String) {
+                      attendances(token: $token, skip: $skip, limit: $limit) {
                           id
                           registration_number
                           attendance_date

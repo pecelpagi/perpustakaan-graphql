@@ -3,36 +3,48 @@ import React from "react";
 import moment from "moment";
 import * as graphqlApi from "../data";
 import Table from "../components/Table";
+import { checkIsMember } from "../utils";
 
-const columns = fn => [
-  {
-    id: "attendance_date",
-    title: "Tanggal Kunjungan",
-    width: "20%",
-  },
-  {
-    id: "registration_number",
-    title: "No Induk",
-  },
-  {
-    id: "member_name",
-    title: "Nama Anggota",
-  },
-  {
-    id: "option",
-    title: "",
-    customComponent: (id, rowData) => {
-      const retval = (
-        <div>
-          <button type="button" className="btn btn-sm" onClick={() => { fn(rowData); }}><i className="fa fa-id-card-o" />&nbsp;&nbsp;&nbsp;Data Pengunjung</button>
-        </div>
-      );
-
-      return retval;
+const columns = (fn) => {
+  const columnData = [
+    {
+      id: "attendance_date",
+      title: "Tanggal Kunjungan",
+      width: "20%",
     },
-    width: "20%",
-  },
-];
+    {
+      id: "registration_number",
+      title: "No Induk",
+    },
+    {
+      id: "member_name",
+      title: "Nama Anggota",
+    },
+  ];
+
+  if (!checkIsMember()) {
+    columnData.push({
+      id: "option",
+      title: "",
+      customComponent: (id, rowData) => {
+        const retval = (
+          <div>
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={() => { fn(rowData); }}
+            ><i className="fa fa-id-card-o" />&nbsp;&nbsp;&nbsp;Data Pengunjung</button>
+          </div>
+        );
+
+        return retval;
+      },
+      width: "20%",
+    });
+  }
+
+  return columnData;
+};
 class VisitHistory extends React.Component {
   constructor(props) {
     super(props);

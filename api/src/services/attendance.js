@@ -1,4 +1,5 @@
 const Attendance = require('../models/attendances');
+const Member = require('../models/members');
 
 export const getAttendances = async (args) => {
     let filter = {};
@@ -7,6 +8,12 @@ export const getAttendances = async (args) => {
         filter = {
             registration_number: new RegExp(args.search, "i"),
         }
+    }
+
+    if (args.member_id) {
+        const member = await Member.findById(args.member_id);
+
+        Object.assign(filter, { registration_number: member.registration_number });
     }
 
     let findData = Attendance.find(filter);
