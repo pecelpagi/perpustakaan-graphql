@@ -1,15 +1,12 @@
+import { createFilterState } from './service.utils';
+
 const Book = require('../models/books');
 
 export const getBooks = async (args) => {
     let filter = {};
 
     if (args.search) {
-        filter = {
-            $text: {
-                $search: String(args.search),
-                $caseSensitive: false,
-            },
-        }
+        filter = createFilterState(['code', 'title', 'author'], args.search);
     }
 
     if (args.category_id) {
