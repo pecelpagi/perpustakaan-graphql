@@ -96,7 +96,7 @@ class Peminjaman extends React.Component {
           rowClick={this.onClickRow}
           columns={columns}
           onFetch={this.onFetchData}
-          withWrapperRender={({ makeTable, InputSearch, PageSize }) => (
+          withWrapperRender={({ makeTable, PageSize }) => (
             <div className="panel panel-default">
               <div className="panel-heading">
                 <div className="row">
@@ -106,9 +106,6 @@ class Peminjaman extends React.Component {
                   <div className="col-sm-9">
                     <div className="displayCount">
                       <PageSize />
-                    </div>
-                    <div className="filter-container">
-                      <InputSearch />
                     </div>
                   </div>
                 </div>

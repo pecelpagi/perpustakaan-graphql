@@ -1,12 +1,12 @@
+import { createFilterState } from './service.utils';
+
 const Category = require('../models/categories');
 
 export const getCategories = async (args) => {
     let filter = {};
 
     if (args.search) {
-        filter = {
-            name: new RegExp(args.search, "i"),
-        }
+        filter = createFilterState(['code', 'name'], args.search);
     }
 
     let findData = Category.find(filter);

@@ -92,7 +92,7 @@ class VisitHistory extends React.Component {
           rowClick={() => {}}
           columns={columns(this.onClickRow)}
           onFetch={this.onFetchData}
-          withWrapperRender={({ makeTable, InputSearch, PageSize }) => (
+          withWrapperRender={({ makeTable, PageSize }) => (
             <div className="panel panel-default">
               <div className="panel-heading">
                 <div className="row">
@@ -102,9 +102,6 @@ class VisitHistory extends React.Component {
                   <div className="col-sm-9">
                     <div className="displayCount">
                       <PageSize />
-                    </div>
-                    <div className="filter-container">
-                      <InputSearch />
                     </div>
                   </div>
                 </div>

@@ -1,3 +1,5 @@
+import { createFilterState } from './service.utils';
+
 const Member = require('../models/members');
 
 export const getRegistrationNumber = async () => {
@@ -16,9 +18,7 @@ export const getMembers = async (args) => {
     let filter = {};
 
     if (args.search) {
-        filter = {
-            code: new RegExp(args.search, "i"),
-        }
+        filter = createFilterState(['registration_number', 'name', 'address'], args.search);
     }
 
     let findData = Member.find(filter);

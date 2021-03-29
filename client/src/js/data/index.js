@@ -46,8 +46,8 @@ export const getMembers = async (payload) => {
     .query({
       variables: Object.assign({}, payload, { collection: CollectionType.MEMBER }),
       query: gql`
-                  query Members($skip: Int, $limit: Int, $collection: String) {
-                      members(skip: $skip, limit: $limit) {
+                  query Members($skip: Int, $limit: Int, $collection: String, $search: String) {
+                      members(skip: $skip, limit: $limit, search: $search) {
                           id
                           registration_number
                           name
