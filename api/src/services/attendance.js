@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const Attendance = require('../models/attendances');
 const Member = require('../models/members');
 
@@ -35,6 +37,8 @@ export const addAttendance = async (args) => {
     let filter = {
         registration_number: args.registration_number,
     };
+
+    if (!args.registration_number) throw new Error("Nomor Induk wajib diisi");
 
     const findData = await Member.findOne(filter);
     if (!findData) {

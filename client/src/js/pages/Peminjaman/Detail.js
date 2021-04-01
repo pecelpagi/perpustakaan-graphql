@@ -7,7 +7,7 @@ import FormValidation from "~/components/FormValidation";
 import BrowseData from "~/components/BrowseData";
 import DatePicker from "~/components/DatePicker";
 import * as graphqlApi from "../../data";
-import { catchError } from "~/utils";
+import { catchError, checkIsMember } from "~/utils";
 
 const bookColumns = [
   {
@@ -305,7 +305,7 @@ class PeminjamanDetail extends React.Component {
             </td>
             <td></td>
             <td>
-              {detail.return_date === "-" && <button type="button" className="btn" onClick={this.onReturnBook}>Selesai Pinjam</button>}
+              {detail.return_date === "-" && !checkIsMember() && <button type="button" className="btn" onClick={this.onReturnBook}>Selesai Pinjam</button>}
             </td>
           </tr>
         </tbody>

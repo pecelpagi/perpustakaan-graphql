@@ -8,7 +8,7 @@ import FormValidation from "~/components/FormValidation";
 import BrowseData from "~/components/BrowseData";
 import * as graphqlApi from "../../data";
 import createCode from "./helper";
-import { createPathPreview } from "../../utils";
+import { createPathPreview, checkIsMember } from "../../utils";
 
 const categoryColumns = [
   {
@@ -336,7 +336,7 @@ class BookDetail extends React.Component {
             </td>
             <td></td>
             <td>
-              {isAuthenticated ? <button type="button" className="btn" onClick={this.editBook}>Edit Buku</button> : null}
+              {isAuthenticated && !checkIsMember() ? <button type="button" className="btn" onClick={this.editBook}>Edit Buku</button> : null}
             </td>
           </tr>
         </tbody>

@@ -2,7 +2,9 @@
 import React from "react";
 import * as graphqlApi from "../../data";
 import Table from "../../components/Table";
+import { checkIsMember } from "../../utils";
 
+const isAdmin = !checkIsMember();
 const columns = (fn, isAuthenticated) => [
   {
     id: "code",
@@ -27,14 +29,14 @@ const columns = (fn, isAuthenticated) => [
           <div>
             <button type="button" className="btn btn-sm" onClick={() => { fn("view", val); }}><i className="fa fa-search" />{" "}Cari Koleksi</button>
             &nbsp;&nbsp;
-            <button type="button" className="btn btn-sm" onClick={() => { fn("edit", val); }}><i className="fa fa-edit" />{" "}Edit Data</button>
+            {isAdmin && <button type="button" className="btn btn-sm" onClick={() => { fn("edit", val); }}><i className="fa fa-edit" />{" "}Edit Data</button>}
           </div>
         );
       }
 
       return retval;
     },
-    width: "20%",
+    width: isAdmin ? "20%" : "10%",
   },
 ];
 class Category extends React.Component {
@@ -49,7 +51,7 @@ class Category extends React.Component {
   componentDidMount = () => {
     const { assignButtons, assignBreadcrumbs, isAuthenticated } = this.props;
 
-    if (isAuthenticated) {
+    if (isAuthenticated && isAdmin) {
       assignButtons([{
         id: "1", title: "Tambah Data", icon: "fa fa-plus-square", clickEvent: () => this.callCreateHandler(),
       }]);

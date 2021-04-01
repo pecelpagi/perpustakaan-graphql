@@ -2,8 +2,9 @@
 import React from "react";
 import * as graphqlApi from "../../data";
 import Table from "../../components/Table";
-import { createPathPreview } from "../../utils";
+import { createPathPreview, checkIsMember } from "../../utils";
 
+const isAdmin = !checkIsMember();
 const columns = [
   {
     id: "code",
@@ -41,7 +42,7 @@ class Book extends React.Component {
   componentDidMount = () => {
     const { assignButtons, assignBreadcrumbs, isAuthenticated } = this.props;
 
-    if (isAuthenticated) {
+    if (isAuthenticated && isAdmin) {
       assignButtons([{
         id: "1", title: "Tambah Data", icon: "fa fa-plus-square", clickEvent: () => this.callCreateHandler(),
       }]);
