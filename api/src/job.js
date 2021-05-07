@@ -1,5 +1,5 @@
 const Queue = require('bull');
-const jobQueue = new Queue('JOB_CALCULATE_BORROWING_FINE::TEST_1');
+const jobQueue = new Queue('JOB_CALCULATE_BORROWING_FINE::TEST_2');
 
 import * as borrowingService from './services/borrowing';
 

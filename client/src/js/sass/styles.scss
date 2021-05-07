@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 html,
 body {
   height: 100%;
@@ -17,12 +19,12 @@ body {
   font-weight: 600;
 }
 .btn-primary {
-  background-color: #00B7B4 !important;
+  background-color: $primary-color !important;
   border: 0 !important;
   color: #fff !important;
   outline: none !important;
   &:hover {
-    background-color: #28c8c7 !important;
+    background-color: $primary-color !important;
   }
 }
 .btn-flat {
@@ -31,7 +33,7 @@ body {
 .input-group-btn:last-child>.btn {
   height: 40px;
   width: 44px;
-  color: #00b7b5 !important;
+  color: $primary-color !important;
   background: #FFF !important;
   border: 1px solid #e2e2e2;
 }
@@ -39,7 +41,7 @@ body {
   padding-left: 0px;
   font-size: 12px;
   a {
-    color: #00b7b5;
+    color: $primary-color;
     text-decoration: none !important;
   }
 }
@@ -92,7 +94,7 @@ label {
   padding: 6px 12px;
   box-shadow: none;
   &:focus {
-    border: 1px solid #00b7b5;
+    border: 1px solid $primary-color;
     box-shadow: none;
   }
 }
@@ -132,14 +134,14 @@ label {
 }
 .pagination {
   > li > a {
-    color: #019292;
+    color: $secondary-color;
   }
   a:hover {
     cursor: pointer;
   }
   > .active > a {
-    background: #00b7b5 !important;
-    border-color: #00b7b5 !important;
+    background: $primary-color !important;
+    border-color: $primary-color !important;
   }
 }
 .table-hover tbody tr {
@@ -185,7 +187,7 @@ label {
     background: #FFF !important;
     border-radius: 0px;
     font-weight: normal !important;
-    color: #00b7b5 !important;
+    color: $primary-color !important;
   }
 }
 .modal {

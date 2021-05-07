@@ -1,6 +1,8 @@
+@import '../../sass/variables.scss';
+
 .popup-data-modal {
     .modal-header {
-        background: #00B7B4;
+        background: $primary-color;
         border-bottom: 0px;
     }
     .modal-title {
