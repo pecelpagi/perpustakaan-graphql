@@ -8,7 +8,7 @@ import FormValidation from "~/components/FormValidation";
 import BrowseData from "~/components/BrowseData";
 import * as graphqlApi from "../../data";
 import createCode from "./helper";
-import { createPathPreview, checkIsMember } from "../../utils";
+import { createPathPreview, checkIsMember, catchError } from "../../utils";
 
 const categoryColumns = [
   {
@@ -155,48 +155,59 @@ class BookDetail extends React.Component {
   }
 
   saveDataHandler = async () => {
-    const {
-      form, type, id,
-    } = this.state;
-    this.updateButtonsState(true, true);
+    try {
+      const {
+        form, type, id,
+      } = this.state;
 
-    const isFormValid = await this.form.validateForm();
+      this.setState({
+        isFormSubmitted: true,
+      });
 
-    if (isFormValid) {
-      let payload = {
-        ...form,
-        category_id: form.category.id,
-        code: createCode(form),
-        isbn: String(form.isbn),
-        year: parseInt(form.year, 10),
-        qty: parseInt(form.qty, 10),
-      };
-      delete payload.category;
+      this.updateButtonsState(true, true);
 
-      this.setLoading(true);
+      const isFormValid = await this.form.validateForm();
 
-      if (type === "create") {
-        await graphqlApi.createBook(payload);
-      } else {
-        payload = {
-          id,
-          ...payload,
-          code: form.code,
+      if (isFormValid) {
+        let payload = {
+          ...form,
+          category_id: form.category.id,
+          code: createCode(form),
+          isbn: String(form.isbn),
+          year: parseInt(form.year, 10),
+          qty: parseInt(form.qty, 10),
         };
-        await graphqlApi.updateBook(payload);
+        delete payload.category;
+
+        this.setLoading(true);
+
+        if (type === "create") {
+          await graphqlApi.createBook(payload);
+        } else {
+          payload = {
+            id,
+            ...payload,
+            code: form.code,
+          };
+          await graphqlApi.updateBook(payload);
+        }
+
+        this.setLoading(false);
+
+        this.gotoBasePath();
+        return;
       }
 
+      this.updateButtonsState(false, true);
+    } catch (err) {
+      this.updateButtonsState(false, false);
+      this.doShowingNotification({
+        title: "Terjadi Kesalahan",
+        message: catchError(err),
+        level: "error",
+      });
       this.setLoading(false);
-
-      this.gotoBasePath();
-      return;
     }
-
-    this.updateButtonsState(false, true);
-
-    this.setState({
-      isFormSubmitted: true,
-    });
   }
 
   changeCategoryHandler = (val) => {
