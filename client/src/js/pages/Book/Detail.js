@@ -74,10 +74,17 @@ class BookDetail extends React.Component {
     this.setupData();
   }
 
-  setupData = async () => {
-    const { match: { params }, startLoading, endLoading } = this.props;
+  setLoading = (isLoading) => {
+    const { startLoading, endLoading } = this.props;
 
-    startLoading();
+    if (isLoading) startLoading();
+    if (!isLoading) endLoading();
+  }
+
+  setupData = async () => {
+    const { match: { params } } = this.props;
+
+    this.setLoading(true);
 
     if (params.type === "edit" || params.type === "detail") {
       await this.setupDetailData(params.id, params.type);
@@ -87,7 +94,7 @@ class BookDetail extends React.Component {
       });
     }
 
-    endLoading();
+    this.setLoading(false);
   }
 
   setupBreadcrumbs = (text) => {
@@ -166,6 +173,8 @@ class BookDetail extends React.Component {
       };
       delete payload.category;
 
+      this.setLoading(true);
+
       if (type === "create") {
         await graphqlApi.createBook(payload);
       } else {
@@ -176,6 +185,9 @@ class BookDetail extends React.Component {
         };
         await graphqlApi.updateBook(payload);
       }
+
+      this.setLoading(false);
+
       this.gotoBasePath();
       return;
     }
@@ -249,7 +261,12 @@ class BookDetail extends React.Component {
 
   onDelete = async () => {
     const { id } = this.state;
+
+    this.setLoading(true);
+
     await graphqlApi.deleteBook(id);
+
+    this.setLoading(false);
 
     this.gotoBasePath();
   }
@@ -365,6 +382,7 @@ class BookDetail extends React.Component {
               value={String(form.isbn)}
               name="isbn"
               required
+              numberOnly
             />
             <FieldFeedbacks for="isbn">
               <FieldFeedback when="valueMissing">ISBN wajib diisi</FieldFeedback>
@@ -427,6 +445,7 @@ class BookDetail extends React.Component {
               value={String(form.qty)}
               name="qty"
               required
+              numberOnly
             />
             <FieldFeedbacks for="qty">
               <FieldFeedback when="valueMissing">Jumlah Koleksi wajib diisi</FieldFeedback>
@@ -465,6 +484,7 @@ class BookDetail extends React.Component {
               value={String(form.year)}
               name="year"
               required
+              numberOnly
             />
             <FieldFeedbacks for="year">
               <FieldFeedback when="valueMissing">Tahun terbit wajib diisi</FieldFeedback>

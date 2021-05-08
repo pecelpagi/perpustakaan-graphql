@@ -11,6 +11,8 @@ class InputText extends React.Component {
     changeEvent: PropTypes.func,
     disabled: PropTypes.bool,
     required: PropTypes.bool,
+    type: PropTypes.string,
+    numberOnly: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -21,25 +23,32 @@ class InputText extends React.Component {
     changeEvent: () => {},
     disabled: false,
     required: false,
+    type: "text",
+    numberOnly: false,
   }
 
   changeHandler = (e) => {
-    const { changeEvent } = this.props;
+    const { changeEvent, numberOnly } = this.props;
 
-    changeEvent(e.target.value, e);
+    const val = e.target.value;
+
+    const isNumber = /^\d*$/.test(val);
+    if (!isNumber && numberOnly) return;
+
+    changeEvent(val, e);
   }
 
   render() {
     const {
       label, value, placeholder, disabled,
-      required, name,
+      required, name, type,
     } = this.props;
 
     return (
       <div className={"form-group mb-reset"}>
         {label && <label>{label}</label>}
         <input
-          type="text"
+          type={type}
           name={name}
           className="form-control"
           placeholder={placeholder}

@@ -68,6 +68,7 @@ export const getMembers = async (payload) => {
 export const getBooks = async (payload) => {
   const res = await Util.graphqlClient
     .query({
+      fetchPolicy: "no-cache",
       variables: Object.assign({}, payload, { collection: CollectionType.BOOK }),
       query: gql`
                   query Books($skip: Int, $limit: Int, $category_id: String, $collection: String, $search: String) {

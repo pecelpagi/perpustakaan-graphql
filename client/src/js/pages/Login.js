@@ -133,6 +133,7 @@ class Login extends React.Component {
             <InputText
               label="Password"
               name="password"
+              type="password"
               value={form.password}
               changeEvent={(val, e) => { this.changeValueHandler("password", val, e); }}
               required
