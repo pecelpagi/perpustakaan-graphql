@@ -86,7 +86,7 @@ class AddVisit extends React.Component {
         <form onSubmit={this.handleSubmitAttendance}>
           <div className="add-visit-container__form">
             <div className="text-center">
-                <h4>Selamat berkunjung di Perpustakaan SMAN 1 Cilacap</h4>
+                <h4>Selamat berkunjung di Perpustakaan SMAN 1 Batu</h4>
                 <h4>Mohon masukkan nomor induk anda</h4>
             </div>
             <hr />

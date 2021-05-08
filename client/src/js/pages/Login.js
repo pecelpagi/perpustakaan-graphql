@@ -28,8 +28,8 @@ class Login extends React.Component {
     this.state = {
       isFormSubmitted: false,
       form: {
-        username: "",
-        password: "",
+        username: "superadmin",
+        password: "superadmin",
       },
       footerButtons: this.initialButtonActions,
     };

@@ -99,10 +99,17 @@ class PeminjamanDetail extends React.Component {
     addNotification(val);
   }
 
-  setupData = async () => {
-    const { match: { params }, startLoading, endLoading } = this.props;
+  setLoading = (isLoading) => {
+    const { startLoading, endLoading } = this.props;
 
-    startLoading();
+    if (isLoading) startLoading();
+    if (!isLoading) endLoading();
+  }
+
+  setupData = async () => {
+    const { match: { params } } = this.props;
+
+    this.setLoading(true);
 
     await this.fetchSetting();
 
@@ -114,7 +121,7 @@ class PeminjamanDetail extends React.Component {
       });
     }
 
-    endLoading();
+    this.setLoading(false);
   }
 
   setupBreadcrumbs = (text) => {
@@ -406,12 +413,18 @@ class PeminjamanDetail extends React.Component {
     } = this.state;
     let notifValue = null;
 
+    this.setState({
+      isFormSubmitted: true,
+    });
+
     this.updateButtonsState(true, true);
 
     try {
       const isFormValid = await this.form.validateForm();
 
       if (isFormValid) {
+        this.setLoading(true);
+
         const payload = {
           ...form,
           book_id: form.book.id,
@@ -427,6 +440,8 @@ class PeminjamanDetail extends React.Component {
             level: "success",
           };
         }
+
+        this.setLoading(false);
       }
     } catch (e) {
       notifValue = {
@@ -434,13 +449,10 @@ class PeminjamanDetail extends React.Component {
         message: catchError(e),
         level: "error",
       };
+      this.setLoading(false);
     }
 
     this.updateButtonsState(false, true);
-
-    this.setState({
-      isFormSubmitted: true,
-    });
 
     if (notifValue) {
       this.doShowingNotification(notifValue);

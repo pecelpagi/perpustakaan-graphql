@@ -70,6 +70,13 @@ class MemberDetail extends React.Component {
     addNotification(message);
   }
 
+  setLoading = (isLoading) => {
+    const { startLoading, endLoading } = this.props;
+
+    if (isLoading) startLoading();
+    if (!isLoading) endLoading();
+  }
+
   setupRegistrationNumber = async () => {
     const { form } = this.state;
     const registrationNumber = await graphqlApi.getRegistrationNumber();
@@ -82,9 +89,9 @@ class MemberDetail extends React.Component {
   }
 
   setupData = async () => {
-    const { match: { params }, startLoading, endLoading } = this.props;
+    const { match: { params } } = this.props;
 
-    startLoading();
+    this.setLoading(true);
 
     if (params.type === "edit") {
       await this.setupDetailData(params.id);
@@ -93,7 +100,7 @@ class MemberDetail extends React.Component {
       await this.setupRegistrationNumber();
     }
 
-    endLoading();
+    this.setLoading(false);
   }
 
   setupBreadcrumbs = (text) => {
@@ -272,6 +279,8 @@ class MemberDetail extends React.Component {
       const isFormValid = await this.form.validateForm();
 
       if (isFormValid) {
+        this.setLoading(true);
+
         if (type === "create") {
           await graphqlApi.createMember(form);
         } else {
@@ -281,12 +290,16 @@ class MemberDetail extends React.Component {
           };
           await graphqlApi.updateMember(payload);
         }
+
+        this.setLoading(false);
+
         this.gotoBasePath();
         return;
       }
 
       this.updateButtonsState(false, true);
     } catch (err) {
+      this.setLoading(false);
       this.updateButtonsState(false, false);
       this.doShowingNotification({
         title: "Terjadi Kesalahan",
@@ -301,7 +314,10 @@ class MemberDetail extends React.Component {
       id,
     } = this.state;
 
+    this.setLoading(true);
     await graphqlApi.deleteMember(id);
+    this.setLoading(false);
+
     this.gotoBasePath();
   }
 

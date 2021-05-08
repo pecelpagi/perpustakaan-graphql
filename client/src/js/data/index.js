@@ -44,6 +44,7 @@ export const getUsers = async () => {
 export const getMembers = async (payload) => {
   const res = await Util.graphqlClient
     .query({
+      fetchPolicy: "no-cache",
       variables: Object.assign({}, payload, { collection: CollectionType.MEMBER }),
       query: gql`
                   query Members($skip: Int, $limit: Int, $collection: String, $search: String) {

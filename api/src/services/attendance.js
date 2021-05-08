@@ -18,7 +18,7 @@ export const getAttendances = async (args) => {
         Object.assign(filter, { registration_number: member.registration_number });
     }
 
-    let findData = Attendance.find(filter);
+    let findData = Attendance.find(filter).sort('-attendance_date');
 
     if (args.skip) {
         findData = findData.skip(args.skip);
