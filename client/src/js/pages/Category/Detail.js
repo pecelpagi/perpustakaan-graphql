@@ -67,10 +67,17 @@ class CategoryDetail extends React.Component {
     addNotification(message);
   }
 
-  setupData = async () => {
-    const { match: { params }, startLoading, endLoading } = this.props;
+  setLoading = (isLoading) => {
+    const { startLoading, endLoading } = this.props;
 
-    startLoading();
+    if (isLoading) startLoading();
+    if (!isLoading) endLoading();
+  }
+
+  setupData = async () => {
+    const { match: { params } } = this.props;
+
+    this.setLoading(true);
 
     if (params.type === "edit") {
       await this.setupDetailData(params.id);
@@ -78,7 +85,7 @@ class CategoryDetail extends React.Component {
       this.setupBreadcrumbs("Tambah Data");
     }
 
-    endLoading();
+    this.setLoading(false);
   }
 
   setupBreadcrumbs = (text) => {
@@ -213,6 +220,8 @@ class CategoryDetail extends React.Component {
       const isFormValid = await this.form.validateForm();
 
       if (isFormValid) {
+        this.setLoading(true);
+
         if (type === "create") {
           await graphqlApi.createCategory(form);
         } else {
@@ -222,6 +231,9 @@ class CategoryDetail extends React.Component {
           };
           await graphqlApi.updateCategory(payload);
         }
+
+        this.setLoading(false);
+
         this.gotoBasePath();
         return;
       }
@@ -234,6 +246,7 @@ class CategoryDetail extends React.Component {
         message: catchError(err),
         level: "error",
       });
+      this.setLoading(false);
     }
   }
 
@@ -242,7 +255,10 @@ class CategoryDetail extends React.Component {
       id,
     } = this.state;
 
+    this.setLoading(true);
     await graphqlApi.deleteCategory(id);
+    this.setLoading(false);
+
     this.gotoBasePath();
   }
 

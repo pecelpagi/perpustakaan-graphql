@@ -54,6 +54,17 @@ export const addCategory = async (args) => {
 }
 
 export const updateCategory = async (args) => {
+    const filter = {
+        code: args.code,
+        _id: {
+            $ne: args.id
+        }
+    };
+    const findData = await Category.findOne(filter);
+    if (findData) {
+        throw new Error("Kode Kategori sudah digunakan");
+    }
+
     let payload = {
         code: args.code,
         name: args.name,
