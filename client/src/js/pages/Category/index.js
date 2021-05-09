@@ -28,8 +28,7 @@ const columns = (fn, isAuthenticated) => [
         retval = (
           <div>
             <button type="button" className="btn btn-sm" onClick={() => { fn("view", val); }}><i className="fa fa-search" />{" "}Cari Koleksi</button>
-            &nbsp;&nbsp;
-            {isAdmin && <button type="button" className="btn btn-sm" onClick={() => { fn("edit", val); }}><i className="fa fa-edit" />{" "}Edit Data</button>}
+            {isAdmin && <button type="button" className="btn btn-sm" style={{ marginLeft: "10px" }} onClick={() => { fn("edit", val); }}><i className="fa fa-edit" />{" "}Edit Data</button>}
           </div>
         );
       }

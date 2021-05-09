@@ -57,6 +57,8 @@ export const catchError = (e) => {
 };
 
 export const checkIsMember = () => {
+  if (!getToken()) return false;
+
   const decoded = jwtDecode(getToken());
 
   return ishasProperty(decoded.data, "member_id");
